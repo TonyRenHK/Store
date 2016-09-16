@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+    </head>
+    <body>
+        <script>
+          function onOAuthCallback() {
+            var authInfo = getOAuthInfoFromUrl();
+            var token = authInfo["access_token"];//var token = authInfo["code"];
+            //console.log(token);
+            window.opener.onAuthenticated(token);
+            window.close();
+          }
+
+          function getOAuthInfoFromUrl() {
+            if (window.location.hash || window.location.search) {
+              
+               var authResponse = window.location.hash.substring(1);//var authResponse = window.location.search.substring(1);//window.location.hash.substring(1);
+              
+              var authInfo = JSON.parse(
+                '{"' + authResponse.replace(/&/g, '","').replace(/=/g, '":"') + '"}',
+                function(key, value) { return key === "" ? value : decodeURIComponent(value); });
+              return authInfo;
+            } else {
+              alert("An error occurred while getting access token");
+            }
+          }
+
+          onOAuthCallback();
+        </script>
+    </body>
+</html>

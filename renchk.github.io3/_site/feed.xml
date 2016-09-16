@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tony Ren Blog</title>
+    <description></description>
+    <link>https://renchk.github.io/</link>
+    <atom:link href="https://renchk.github.io/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Sun, 28 Aug 2016 14:21:39 +0000</pubDate>
+    <lastBuildDate>Sun, 28 Aug 2016 14:21:39 +0000</lastBuildDate>
+    <generator>Jekyll v3.2.1</generator>
+    
+      <item>
+        <title>How to push my code to github?</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#question&quot; id=&quot;markdown-toc-question&quot;&gt;Question&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#how-to-push-my-code-to-github&quot; id=&quot;markdown-toc-how-to-push-my-code-to-github&quot;&gt;How to push my code to github?&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#follow-below-code&quot; id=&quot;markdown-toc-follow-below-code&quot;&gt;follow below Code&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;question&quot;&gt;Question&lt;/h2&gt;
+
+&lt;p&gt;I have some codes in Cloud 9. How to push my code to github?&lt;/p&gt;
+
+&lt;h2 id=&quot;how-to-push-my-code-to-github&quot;&gt;How to push my code to github?&lt;/h2&gt;
+
+&lt;p&gt;It applied in cloud 9.&lt;/p&gt;
+
+&lt;h2 id=&quot;follow-below-code&quot;&gt;follow below Code&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cd workspace
+$ cd renchk.github.io
+$ git add -A
+$ git commit -m &quot;20160721&quot; 
+$ git remote add b1 https://github.com/Renchk/renchk.github.io.git 
+$ git push -u origin9 master  
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+</description>
+        <pubDate>Thu, 25 Aug 2016 00:00:00 +0000</pubDate>
+        <link>https://renchk.github.io/2016/08/25/Howtopushmycodetogithub/</link>
+        <guid isPermaLink="true">https://renchk.github.io/2016/08/25/Howtopushmycodetogithub/</guid>
+        
+        <category>Git</category>
+        
+        <category>GitHub</category>
+        
+        
+        <category>GitHub</category>
+        
+      </item>
+    
+  </channel>
+</rss>
