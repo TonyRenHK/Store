@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Your awesome title</title>
+    <description>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
+</description>
+    <link>http://example.com/</link>
+    <atom:link href="http://example.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Fri, 26 Aug 2016 09:41:26 +0000</pubDate>
+    <lastBuildDate>Fri, 26 Aug 2016 09:41:26 +0000</lastBuildDate>
+    <generator>Jekyll v3.2.1</generator>
+    
+      <item>
+        <title>Welcome to Jekyll!</title>
+        <description>&lt;p&gt;You’ll find this post in your &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run &lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll serve&lt;/code&gt;, which launches a web server and auto-regenerates your site when a file is updated.&lt;/p&gt;
+
+&lt;p&gt;To add new posts, simply add a file in the &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory that follows the convention &lt;code class=&quot;highlighter-rouge&quot;&gt;YYYY-MM-DD-name-of-post.ext&lt;/code&gt; and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.&lt;/p&gt;
+
+&lt;p&gt;Jekyll also offers powerful support for code snippets:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Hi, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'Tom'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#=&amp;gt; prints 'Hi, Tom' to STDOUT.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Check out the &lt;a href=&quot;http://jekyllrb.com/docs/home&quot;&gt;Jekyll docs&lt;/a&gt; for more info on how to get the most out of Jekyll. File all bugs/feature requests at &lt;a href=&quot;https://github.com/jekyll/jekyll&quot;&gt;Jekyll’s GitHub repo&lt;/a&gt;. If you have questions, you can ask them on &lt;a href=&quot;https://talk.jekyllrb.com/&quot;&gt;Jekyll Talk&lt;/a&gt;.&lt;/p&gt;
+
+</description>
+        <pubDate>Fri, 26 Aug 2016 09:19:17 +0000</pubDate>
+        <link>http://example.com/jekyll/update/2016/08/26/welcome-to-jekyll.html</link>
+        <guid isPermaLink="true">http://example.com/jekyll/update/2016/08/26/welcome-to-jekyll.html</guid>
+        
+        
+        <category>jekyll</category>
+        
+        <category>update</category>
+        
+      </item>
+    
+      <item>
+        <title>Tony Test</title>
+        <description>&lt;h1 id=&quot;dillinger&quot;&gt;Dillinger&lt;/h1&gt;
+
+&lt;p&gt;Dillinger is a cloud-enabled, mobile-ready, offline-storage, AngularJS powered HTML5 Markdown editor.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Type some Markdown on the left&lt;/li&gt;
+  &lt;li&gt;See HTML in the right&lt;/li&gt;
+  &lt;li&gt;Magic&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;You can also:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Import and save files from GitHub, Dropbox, Google Drive and One Drive&lt;/li&gt;
+  &lt;li&gt;Drag and drop files into Dillinger&lt;/li&gt;
+  &lt;li&gt;Export documents as Markdown, HTML and PDF&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Markdown is a lightweight markup language based on the formatting conventions that people naturally use in email.  As &lt;a href=&quot;http://daringfireball.net&quot;&gt;John Gruber&lt;/a&gt; writes on the &lt;a href=&quot;http://daringfireball.net/projects/markdown/&quot;&gt;Markdown site&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;The overriding design goal for Markdown’s
+formatting syntax is to make it as readable
+as possible. The idea is that a
+Markdown-formatted document should be
+publishable as-is, as plain text, without
+looking like it’s been marked up with tags
+or formatting instructions.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;This text you see here is &lt;em&gt;actually&lt;/em&gt; written in Markdown! To get a feel for Markdown’s syntax, type some text into the left window and watch the results in the right.&lt;/p&gt;
+
+&lt;h3 id=&quot;tech&quot;&gt;Tech&lt;/h3&gt;
+
+&lt;p&gt;Dillinger uses a number of open source projects to work properly:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://angularjs.org&quot;&gt;AngularJS&lt;/a&gt; - HTML enhanced for web apps!&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://ace.ajax.org&quot;&gt;Ace Editor&lt;/a&gt; - awesome web-based text editor&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/markdown-it/markdown-it&quot;&gt;markdown-it&lt;/a&gt; - Markdown parser done right. Fast and easy to extend.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://twitter.github.com/bootstrap/&quot;&gt;Twitter Bootstrap&lt;/a&gt; - great UI boilerplate for modern web apps&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://nodejs.org&quot;&gt;node.js&lt;/a&gt; - evented I/O for the backend&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://expressjs.com&quot;&gt;Express&lt;/a&gt; - fast node.js network app framework &lt;a href=&quot;http://twitter.com/tjholowaychuk&quot;&gt;@tjholowaychuk&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://gulpjs.com&quot;&gt;Gulp&lt;/a&gt; - the streaming build system&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/madrobby/keymaster&quot;&gt;keymaster.js&lt;/a&gt; - awesome keyboard handler lib by &lt;a href=&quot;http://twitter.com/thomasfuchs&quot;&gt;@thomasfuchs&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://jquery.com&quot;&gt;jQuery&lt;/a&gt; - duh&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;And of course Dillinger itself is open source with a &lt;a href=&quot;https://github.com/joemccann/dillinger&quot;&gt;public repository&lt;/a&gt;
+ on GitHub.&lt;/p&gt;
+
+&lt;h3 id=&quot;installation&quot;&gt;Installation&lt;/h3&gt;
+
+&lt;p&gt;Dillinger requires &lt;a href=&quot;https://nodejs.org/&quot;&gt;Node.js&lt;/a&gt; v4+ to run.&lt;/p&gt;
+
+&lt;p&gt;Download and extract the &lt;a href=&quot;https://github.com/joemccann/dillinger/releases&quot;&gt;latest pre-built release&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Install the dependencies and devDependencies and start the server.&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;dillinger
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;npm install -d
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;node app
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;For production environments…&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;npm install --production
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;npm run predeploy
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;NODE_ENV&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;production node app
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;plugins&quot;&gt;Plugins&lt;/h3&gt;
+
+&lt;p&gt;Dillinger is currently extended with the following plugins&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Dropbox&lt;/li&gt;
+  &lt;li&gt;Github&lt;/li&gt;
+  &lt;li&gt;Google Drive&lt;/li&gt;
+  &lt;li&gt;OneDrive&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Readmes, how to use them in your own application can be found here:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/joemccann/dillinger/tree/master/plugins/dropbox/README.md&quot;&gt;plugins/dropbox/README.md&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/joemccann/dillinger/tree/master/plugins/github/README.md&quot;&gt;plugins/github/README.md&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/joemccann/dillinger/tree/master/plugins/googledrive/README.md&quot;&gt;plugins/googledrive/README.md&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/joemccann/dillinger/tree/master/plugins/onedrive/README.md&quot;&gt;plugins/onedrive/README.md&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;development&quot;&gt;Development&lt;/h3&gt;
+
+&lt;p&gt;Want to contribute? Great!&lt;/p&gt;
+
+&lt;p&gt;Dillinger uses Gulp + Webpack for fast developing.
+Make a change in your file and instantanously see your updates!&lt;/p&gt;
+
+&lt;p&gt;Open your favorite Terminal and run these commands.&lt;/p&gt;
+
+&lt;p&gt;First Tab:&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;node app
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Second Tab:&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;gulp watch
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;(optional) Third:&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;karma start
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;h4 id=&quot;building-for-source&quot;&gt;Building for source&lt;/h4&gt;
+&lt;p&gt;For production release:&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;gulp build --prod
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;Generating pre-built zip archives for distribution:&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;gulp build dist --prod
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;h3 id=&quot;docker&quot;&gt;Docker&lt;/h3&gt;
+&lt;p&gt;Dillinger is very easy to install and deploy in a Docker container.&lt;/p&gt;
+
+&lt;p&gt;By default, the Docker will expose port 80, so change this within the Dockerfile if necessary. When ready, simply use the Dockerfile to build the image.&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;dillinger
+npm run-script build-docker
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;This will create the dillinger image and pull in the necessary dependencies. Moreover, this uses a &lt;em&gt;hack&lt;/em&gt; to get a more optimized &lt;code class=&quot;highlighter-rouge&quot;&gt;npm&lt;/code&gt; build by copying the dependencies over and only installing when the &lt;code class=&quot;highlighter-rouge&quot;&gt;package.json&lt;/code&gt; itself has changed.  Look inside the &lt;code class=&quot;highlighter-rouge&quot;&gt;package.json&lt;/code&gt; and the &lt;code class=&quot;highlighter-rouge&quot;&gt;Dockerfile&lt;/code&gt; for more details on how this works.&lt;/p&gt;
+
+&lt;p&gt;Once done, run the Docker image and map the port to whatever you wish on your host. In this example, we simply map port 8000 of the host to port 80 of the Docker (or whatever port was exposed in the Dockerfile):&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run -d -p 8000:8080 --restart&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;always&quot;&lt;/span&gt; &amp;lt;youruser&amp;gt;/dillinger:latest
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Verify the deployment by navigating to your server address in your preferred browser.&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;127.0.0.1:8000
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;kubernetes--google-cloud&quot;&gt;Kubernetes + Google Cloud&lt;/h4&gt;
+
+&lt;p&gt;See &lt;a href=&quot;https://github.com/joemccann/dillinger/blob/master/KUBERNETES.md&quot;&gt;KUBERNETES.md&lt;/a&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;docker-composeyml&quot;&gt;docker-compose.yml&lt;/h4&gt;
+
+&lt;p&gt;Change the path for the nginx conf mounting path to your full path, not mine!&lt;/p&gt;
+
+&lt;h3 id=&quot;nsolid-and-nginx&quot;&gt;N|Solid and NGINX&lt;/h3&gt;
+
+&lt;p&gt;More details coming soon.&lt;/p&gt;
+
+&lt;h3 id=&quot;todos&quot;&gt;Todos&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Write Tests&lt;/li&gt;
+  &lt;li&gt;Rethink Github Save&lt;/li&gt;
+  &lt;li&gt;Add Code Comments&lt;/li&gt;
+  &lt;li&gt;Add Night Mode&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;license&quot;&gt;License&lt;/h2&gt;
+
+&lt;p&gt;MIT&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Free Software, Hell Yeah!&lt;/strong&gt;&lt;/p&gt;
+
+</description>
+        <pubDate>Fri, 26 Aug 2016 09:19:17 +0000</pubDate>
+        <link>http://example.com/jekyll/update/2016/08/26/TonyTesting.html</link>
+        <guid isPermaLink="true">http://example.com/jekyll/update/2016/08/26/TonyTesting.html</guid>
+        
+        
+        <category>jekyll</category>
+        
+        <category>update</category>
+        
+      </item>
+    
+  </channel>
+</rss>
