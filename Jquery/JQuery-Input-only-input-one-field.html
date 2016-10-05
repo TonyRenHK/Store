@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script>
+
+$(document).ready(function(){
+ $("#id1").keyup(function(){
+  if(($('#id1').val().length > 0)){
+   $("#id2").prop( "disabled", true );
+  }else{
+   $("#id2").prop( "disabled", false );
+  }
+ 
+ });
+ 
+ 
+ $("#id2").keyup(function(){
+ if(($('#id2').val().length > 0)){
+   $("#id1").prop( "disabled", true );
+  }else{
+   $("#id1").prop( "disabled", false );
+  }
+ });
+ 
+ 
+});
+    
+</script>
+    <style>
+  div {
+    background: #def3ca;
+    margin: 3px;
+    width: 80px;
+    display: none;
+    float: left;
+    text-align: center;
+  }
+  </style>
+    
+</head>
+<body>
+
+<form action="">
+Input1: <input type="text" name="user" id="id1"><br>
+Input2: <input type="text" name="id" id="id2">
+    
+</form>
+
+</body>
+</html>

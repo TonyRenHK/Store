@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Generate Blog Post Name quickly</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <form>
+            <div class="form-group">
+			<div class="col-xs-12">
+                <label for="InputName">Input:</label>
+                <input type="text" class="form-control" id="InputName"> </input>
+            </div>
+			</div>
+			<div class="form-group">
+			<div class="col-xs-4">
+                <label for="InputName">Repalce With:</label>
+                <input type="text" class="form-control" id="RepalceWith" value="-"> </input>
+				</div>
+            </div>
+			
+			
+			
+            <div class="form-group">
+			<div class="col-xs-12">
+                <label for="Output">Output:</label>
+                
+				 <input type="text" class="form-control" id="OutputDIV" > </input>
+				</div>
+            </div>
+			
+        </form>
+        <script>
+            $("#InputName").keyup(function(event) {
+                changeFun();
+
+            });
+			
+			$("#RepalceWith").keyup(function(event) {
+                changeFun();
+
+            });
+			
+            function changeFun() {
+                var currentVal = $('#InputName').val();
+				var RepalceVal=$('#RepalceWith').val();
+                var today = new Date();
+                var dd = today.getDate();
+                var mm = today.getMonth() + 1; //January is 0!
+                if (dd < 10) {
+                    dd = '0' + dd
+                }
+
+                if (mm < 10) {
+                    mm = '0' + mm
+                }
+                var yyyy = today.getFullYear();
+                //console.log(yyyy+'-'+mm+'-'+dd);
+				//console.log(currentVal.split(' ').join(RepalceVal));
+				//console.log(RepalceVal);
+				var outputval=yyyy+'-'+mm+'-'+dd+'-'+currentVal.split(' ').join(RepalceVal)+'.markdown';
+				$('#OutputDIV').val(outputval);
+            }
+        </script>
+    </div>
+
+</body>
+
+</html>

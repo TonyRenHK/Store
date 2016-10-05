@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>jsTree test</title>
+
+<!---https://static.jstree.com/3.0.0-beta3/assets/dist/themes/default/style.min.css------>
+    <link rel="stylesheet" href="https://cdn.rawgit.com/orangehill/jstree-bootstrap-theme/master/dist/themes/proton/style.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.0.9/jstree.min.js"></script>
+
+</head>
+
+<body>
+    <!-- 3 setup a container element -->
+    <div id="jstree">
+
+    </div>
+
+
+    <script>
+        $(function() {
+            var data = [{
+                "id": "ajson1",
+                "parent": "#",
+                "text": "Simple root node"
+            }, {
+                "id": "ajson2",
+                "parent": "#",
+                "text": "Root node 2"
+            }, {
+                "id": "ajson3",
+                "parent": "ajson2",
+                "text": "Child 1"
+            }, {
+                "id": "ajson4",
+                "parent": "ajson2",
+                "text": "Child 2"
+            }, ];
+            
+            $("#jstree").jstree({
+                "core": {
+                    // so that create works
+                    "check_callback": true,
+
+                    "data": data,
+                    'themes': {
+                    'name': 'proton',
+                    'responsive': true,
+                    "check_callback" : true
+                    }
+                },
+                "plugins": [ "dnd"]
+            }).on('create_node.jstree', function(e, data) {
+                console.log('saved');
+            });
+            
+            
+             $('#jstree').on("changed.jstree", function (e, data) {
+              console.log('Yes');
+              console.log(data.selected);
+            });
+    
+        });
+    </script>
+</body>
+
+</html>
