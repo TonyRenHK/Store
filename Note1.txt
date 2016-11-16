@@ -1,0 +1,1762 @@
+Microsoft Windows [Version 6.1.7601]
+Copyright (c) 2009 Microsoft Corporation.  All rights reserved.
+
+C:\Users\Administrator>cd C:\Users\Administrator\Desktop\Scripts\UAT
+
+C:\Users\Administrator\Desktop\Scripts\UAT>DataExportFull.cmd
+   ERROR - 1005017 - Unable to write information to export file [C:\Oracle\Middl
+eware\user_projects\epmsystem2\EssbaseServer\essbaseserver1\app\exp_full_data5_1
+.txt] due to insufficient free space on that drive.
+C:\Users\Administrator\Desktop\Scripts\UAT>DataExportFull.cmd
+   ERROR - 1042013 - Network error [10054]: Failed to receive data.
+   ERROR - 1006078 - No message for message #1006078 in message database.
+C:\Users\Administrator\Desktop\Scripts\UAT>DataExportFull.cmd
+   ERROR - 1042013 - Network error [10054]: Failed to receive data.
+   ERROR - 1006078 - No message for message #1006078 in message database.
+C:\Users\Administrator\Desktop\Scripts\UAT>
+
+
+            //-------------------------------------------------- Prefix Relationship ----------------------------------------------------------//
+            List<ASI_MFM_Role_Prefix_Relationship__c> PrefixRole_List = new List<ASI_MFM_Role_Prefix_Relationship__c>();
+            ASI_MFM_Role_Prefix_Relationship__c rel_Payment = new ASI_MFM_Role_Prefix_Relationship__c (ASI_MFM_Prefix__c = prefixPayment.id,ASI_MFM_Role_Name__c = Role_Test.DeveloperName);
+            PrefixRole_List.add(rel_Payment);
+            
+            ASI_MFM_Role_Prefix_Relationship__c rel_PO = new ASI_MFM_Role_Prefix_Relationship__c(ASI_MFM_Prefix__c = prefixPO.id, ASI_MFM_Role_Name__c = Role_Test.DeveloperName);
+            PrefixRole_List.add(rel_PO); 
+            
+            ASI_MFM_Role_Prefix_Relationship__c rel_Plan = new ASI_MFM_Role_Prefix_Relationship__c (ASI_MFM_Prefix__c = prefixKR_PLAN.id,ASI_MFM_Role_Name__c = Role_Test.DeveloperName );
+            PrefixRole_List.add(rel_Plan); 
+            
+            ASI_MFM_Role_Prefix_Relationship__c rel_PR = new ASI_MFM_Role_Prefix_Relationship__c(ASI_MFM_Prefix__c = prefixPR.id,ASI_MFM_Role_Name__c = Role_Test.DeveloperName);
+            PrefixRole_List.add(rel_PR);
+            
+            insert PrefixRole_List;
+            
+            
+            //-------------------------------------------------- Approval Process ----------------------------------------------------------//
+            ASI_MFM_KR_approvalSetting__c ApprovalSettingTest = new ASI_MFM_KR_approvalSetting__c(Name = string.valueOf(Role_Test.id), ASI_KR_FAR_subCategory__c = 'XXXTrade Marketing');
+            insert ApprovalSettingTest;
+            
+            //-------------------------------------------------- Project Code ----------------------------------------------------------//
+            ASI_MFM_Project_Code__c pjCode = new ASI_MFM_Project_Code__c(name='PJ Code',recordtypeid = Global_RecordTypeCache.getRtId('ASI_MFM_Project_Code__cASI_MFM_KR_Project_Code'),ASI_MFM_Code__c='1042');
+            insert pjCode;
+            
+            //-------------------------------------------------- BrandGroup, Brand, SubBrand----------------------------------------------------------//
+            ASI_CRM_CN_Brand_Group__c BrandGroup = new ASI_CRM_CN_Brand_Group__c(Name = 'Brand Group Name',
+                                                                                 recordtypeid = Global_RecordTypeCache.getRtId('ASI_CRM_CN_Brand_Group__cASI_MFM_KR_Brand_Group'),
+                                                                                 ASI_CRM_Brand_Group_Code__c = 'Code_123');
+            insert BrandGroup;
+            
+            ASI_MFM_Brand__c Brand = new ASI_MFM_Brand__c(Name='Brand Name',
+                                                          ASI_MFM_Reporting_Brand_Desc__c = 'Reporting Brand',
+                                                          ASI_CRM_CN_Brand_Group_c__c = BrandGroup.id,
+                                                          recordtypeid = Global_RecordTypeCache.getRtId('ASI_MFM_Brand__cASI_MFM_KR_Brand'));
+            insert Brand;
+            
+            ASI_MFM_Sub_brand__c SubBrand = new ASI_MFM_Sub_brand__c(ASI_MFM_Brand__c=Brand.id,recordTypeId = Global_RecordTypeCache.getRtId('ASI_MFM_Sub_brand__cASI_MFM_KR_Sub_Brand'), Name='TestSubBrand',ASI_MFM_Sub_brand_Code__c='Code');
+            insert SubBrand;
+            
+            //-------------------------------------------------- Plan ----------------------------------------------------------//
+            ASI_MFM_Plan__c plan1 = new ASI_MFM_Plan__c( Name = 'Test Plan2',
+                                                        ASI_MFM_Project_Code__c=pjCode.id,
+                                                        recordtypeid = Global_RecordTypeCache.getRtId('ASI_MFM_Plan__cASI_MFM_KR_Plan_Read_Only'),
+                                                        ASI_MFM_Start_Date__c = date.today().adddays(1),
+                                                        ASI_MFM_End_Date__c = date.today().adddays(1),
+                                                        ASI_MFM_Prefix__c = prefixKR_PLAN.id, 
+                                                        ASI_MFM_Status__c='Approved',   
+                                                        ASI_MFM_Budget_Type__c = 'NORM',  
+                                                        OwnerId =u.id);
+            insert plan1;
+            
+            ASI_MFM_Plan_Line_Item__c planLine1 = new ASI_MFM_Plan_Line_Item__c (ASI_MFM_Plan__c = plan1.ID,
+                                                                                 ASI_MFM_Month_1_Cost__c = 100,
+                                                                                 ASI_MFM_Month_2_Cost__c = 100,
+                                                                                 ASI_MFM_Month_3_Cost__c = 100,   
+                                                                                 ASI_MFM_Month_4_Cost__c = 100,
+                                                                                 ASI_MFM_Month_5_Cost__c = 100,
+                                                                                 ASI_MFM_Month_6_Cost__c = 100,
+                                                                                 ASI_MFM_Month_7_Cost__c = 100,
+                                                                                 ASI_MFM_Month_8_Cost__c = 100,
+                                                                                 ASI_MFM_Month_9_Cost__c = 100,
+                                                                                 ASI_MFM_Month_10_Cost__c = 100,
+                                                                                 ASI_MFM_Month_11_Cost__c = 100,
+                                                                                 ASI_MFM_Month_12_Cost__c = 200,
+                                                                                 ASI_MFM_TH_Region__c = 'KR',
+                                                                                 ASI_MFM_Total_Cost__c = 10000,
+                                                                                 ASI_MFM_Sub_brand_Code__c = SubBrand.id,
+                                                                                 recordtypeid = Global_RecordTypeCache.getRtId('ASI_MFM_Plan_Line_Item__cASI_MFM_KR_Plan_Line_Item'));
+            insert planLine1;
+            
+            //-------------------------------------------------- Tax Code ----------------------------------------------------------//
+            ASI_MFM_Tax_Code__c TaxCode = new ASI_MFM_Tax_Code__c (Name = 'Tax Code',
+                                                                   recordtypeid = Global_RecordTypeCache.getRtId('ASI_MFM_Tax_Code__cASI_MFM_KR_Tax_Code'),
+                                                                   ASI_MFM_VAT_Rate__c = 100);
+            insert TaxCode;  
+            
+            //-------------------------------------------------- Venue----------------------------------------------------------//
+            List<Account> AccountList = new List<Account>();
+            
+            Account acc1 = new Account(recordTypeId=Global_RecordTypeCache.getRtId('AccountASI_KR_Warehouse'),Name='Name1', ASI_LUX_Email_Business__c = 'TestingEmail@test.com',
+                                       ASI_MFM_Address_Line_1__c = '1',
+                                       ASI_MFM_Address_Line_2__c = '2');          
+            AccountList.add(acc1);
+            
+            //-------------------------------------------------- Supplier----------------------------------------------------------//
+            Account acc2 = new Account(recordTypeId=Global_RecordTypeCache.getRtId('AccountASI_KR_Supplier'),Name='Name1', ASI_LUX_Email_Business__c = 'TestingEmail@test.com');          
+            AccountList.add(acc2);
+            
+            insert AccountList;
+            //------------------------------------------------------- Customer ----------------------------------------------------------// 
+            ASI_CRM_AccountsAdditionalField__c customer1 = new ASI_CRM_AccountsAdditionalField__c(recordTypeId=Global_RecordTypeCache.getRtId('ASI_CRM_AccountsAdditionalField__cASI_CRM_KR_Venue'));
+            insert customer1;
+            
+            //-------------------------------------------------- AP Code----------------------------------------------------------//
+            ASI_MFM_AP_Code__c	AP_Code = new ASI_MFM_AP_Code__c(ASI_MFM_AP_Code__c = 'Code', 
+                                                                 Name = 'AP Code Test',
+                                                                 ASI_MFM_PRPO_Needed__c=true,
+                                                                 recordtypeid = Global_RecordTypeCache.getRtId('ASI_MFM_AP_Code__cASI_KR_AP_Code'));
+            insert AP_Code;
+            //-------------------------------------------------- PR ----------------------------------------------------------//
+            ASI_MFM_Purchase_Request__c PR_Header = new ASI_MFM_Purchase_Request__c (ASI_MFM_Raised_Date__c = date.today(),
+                                                                                     ASI_MFM_Comment__c = 'comment',
+                                                                                     ASI_MFM_PR_Name__c='PR Name',
+                                                                                     ASI_MFM_Company_Code__c = 'PRK',
+                                                                                     ASI_MFM_PR_Date__c = date.today(),
+                                                                                     ASI_MFM_Plan__c = plan1.id,
+                                                                                     ASI_MFM_Service_Item_POSM__c = 'POSM',
+                                                                                     ASI_MFM_Ship_To__c = acc1.ID,
+                                                                                     ASI_MFM_Status__c = 'Approved',
+                                                                                     ASI_MFM_Prefix__c = prefixPR.id,
+                                                                                     recordtypeid = Global_RecordTypeCache.getRtId('ASI_MFM_Purchase_Request__cASI_MFM_KR_Purchase_Request_Read_Only'));
+            
+            insert PR_Header;    
+            
+            ASI_MFM_Purchase_Request_Line__c PR_Line = new ASI_MFM_Purchase_Request_Line__c (recordtypeid = Global_RecordTypeCache.getRtId('ASI_MFM_Purchase_Request_Line__cASI_MFM_KR_Purchase_Request_Line'),
+                                                                                             ASI_MFM_Plan_Line_Item__c = planLine1.id,
+                                                                                             ASI_MFM_Purchase_Request__c = PR_Header.id,
+                                                                                             ASI_MFM_AP_Code__c = AP_Code.ID,
+                                                                                             ASI_MFM_Quantity__c = 10,
+                                                                                             ASI_MFM_UOM__c = 'EA',
+                                                                                             ASI_MFM_Tax_Code__c = TaxCode.id,
+                                                                                             ASI_MFM_Estimated_PR_budget__c = 100,
+                                                                                             ASI_MFM_Delivery_Date__c= date.today(),
+                                                                                             ASI_MFM_Description__c = 'Description',
+                                                                                             ASI_MFM_Unit_Cost__c = 100);
+            insert PR_Line;
+            
+            
+            
+            
+            
+            //-------------------------------------------------- PO ----------------------------------------------------------//
+            
+            ASI_MFM_PO__c po = new ASI_MFM_PO__c(ASI_MFM_Supplier_Name__c = acc2.id,
+                                                 ASI_MFM_Purchase_Request__c = PR_Header.id,
+                                                 ASI_MFM_PO_Raised_Date__c = date.today(),  
+                                                 ASI_MFM_Status__c = 'Draft',
+                                                 ASI_MFM_Prefix__c = prefixPO.id,
+                                                 ASI_MFM_Plan__c = plan1.id,
+                                                 ASI_MFM_VAT__c = 10.00,
+                                                 ASI_MFM_Company_Code__c = '222',
+                                                 ASI_MFM_Warehouse__c = acc1.id,
+                                                 recordtypeid = Global_RecordTypeCache.getRtId('ASI_MFM_PO__cASI_MFM_KR_PO'));
+            insert po;  
+            
+            
+            
+            ASI_MFM_PO_Line_Item__c po_line = new ASI_MFM_PO_Line_Item__c (recordtypeid = Global_RecordTypeCache.getRtId('ASI_MFM_PO_Line_Item__cASI_MFM_KR_PO_Line_Item'),
+                                                                           ASI_MFM_PO__c = po.id,
+                                                                           ASI_MFM_Plan_Line_Item__c = planLine1.id,
+                                                                           ASI_MFM_Unit_Price__c = 1000,  
+                                                                           ASI_MFM_KR_Quantity__c = 100,    
+                                                                           ASI_MFM_Amount__c = 100000,
+                                                                           ASI_MFM_Delivery_Date__c =  date.today(),
+                                                                           ASI_MFM_G_L_Date__c = date.today(),   
+                                                                           ASI_MFM_Purchase_Request_Line__c = PR_Line.id
+                                                                          );
+            
+            insert po_line;
+            Test.startTest();        
+            //-------------------------------------------------- PO Receipt ----------------------------------------------------------//
+          
+            //------------------------------------------------------- Payment ----------------------------------------------------------//
+            ASI_MFM_Payment__c PaymentHeader = new ASI_MFM_Payment__c (ASI_MFM_Status__c = 'Submitted',
+                                                                       recordtypeid = Global_RecordTypeCache.getRtId('ASI_MFM_Payment__cASI_MFM_KR_Payment'),
+                                                                       ASI_MFM_Supplier_Name__c = acc2.id,
+                                                                       ASI_MFM_PO__c = po.id,
+                                                                       ASI_MFM_Company_Code__c = '222',
+                                                                       ASI_MFM_Send_Approval_Email__c=true,
+                                                                       ASI_MFM_Is_Direct_Payment__c = true,
+                                                                       ASI_MFM_Invoice_Number__c = 'OLD INVOICE NUMBER');  
+            
+            insert PaymentHeader;
+            
+            
+            ASI_MFM_Payment_Line_Item__c PaymentLine = new ASI_MFM_Payment_Line_Item__c (recordtypeid = Global_RecordTypeCache.getRtId('ASI_MFM_Payment_Line_Item__cASI_MFM_KR_Payment_Line_Item'),
+                                                                                         ASI_MFM_Payment__c = PaymentHeader.id,
+
+ASI_MFM_Payment_Amount__c = 1,
+                                                                                         ASI_MFM_Invoice_Number__c = 'Invoice Number',
+                                                                                         ASI_MFM_PO_Line_Item__c = po_line.id,
+                                                                                         ASI_MFM_Beneficiary_Customer__c = customer1.id);
+            //ASI_MFM_PO_Receipt_Item__c = POR_Line.id);
+            insert PaymentLine;
+            
+            
+            
+            ASI_MFM_KR_Payment_TriggerClass ext = new ASI_MFM_KR_Payment_TriggerClass();  
+            
+            
+            PaymentHeader.ASI_MFM_Invoice_Number__c = 'Invoice Number Changed-1';
+            update PaymentLine;
+            
+            PaymentHeader.ASI_MFM_Status__c = 'Approved';
+            update PaymentHeader;
+            
+            PaymentHeader.ASI_MFM_Invoice_Number__c = 'Invoice Number Changed-2';
+            update PaymentLine;
+            
+            test.stopTest();       
+
+
+
+
+
+
+
+OR(
+ISPICKVAL(ASI_MFM_Status__c, "Final") && ISPICKVAL(PRIORVALUE( ASI_MFM_Status__c ), "Submitted"),
+ISPICKVAL(ASI_MFM_Status__c, "Complete") && ISPICKVAL(PRIORVALUE( ASI_MFM_Status__c ), "Submitted"),
+ISPICKVAL(ASI_MFM_Status__c, "Complete") && ISPICKVAL(PRIORVALUE( ASI_MFM_Status__c ), "Draft")  )
+ && ( CONTAINS(RecordType.DeveloperName, "ASI_MFM_PH_DF_PO"))
+
+
+
+
+
+
+
+
+SET CACHE HIGH;
+SET UPDATECALC OFF;
+SET CLEARUPDATESTATUS OFF;
+SET LOCKBLOCK HIGH;
+
+/* Clear Allocation Base before copying data from pre-defined scenario for calculation */
+FIX("BegBalance")
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX(@RELATIVE("Customer_Group",0))
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("BrandPack_Group",0))
+
+"HVol9LAloBase" = #Missing;
+"HVol9LAloSetOrg" = #Missing;
+
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Copy data from pre-defined scenario for Brand to BrandPack allocation */
+FIX("BegBalance")
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX(@RELATIVE("Customer_Group",0))
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("BrandPack_Group",0))
+
+"HVol9LAloBase" (
+IF("HCon" -> "A" -> "Master" -> "Int" == 1)
+"HVol9LAloBase" = @SUMRANGE("HVol9LAct" -> "Int", "Jul":&ActQYTDMonth) + @SUMRANGE("HVol9LOO" -> "Int", &CurMonth:&CurQYTDEndMonth);
+ENDIF
+)
+
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Aggregate Brand for calculation */
+FIX("HVolAloIOrg","HVolAloIAdj","HVol9LAloBase")
+FIX("BegBalance")
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX(@RELATIVE("Customer_Group",0))
+
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+
+@CHILDREN("Calculation_Group");
+
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Check if there is Volume inputted, but no allocation base, setup allocation base for equal allocation for those BrandPacks to be continued */
+FIX("HVol9LAloBase")
+FIX("BegBalance")
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX(@RELATIVE("Customer_Group",0))
+FIX("HSP_InputValue")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("BrandPack_Group",0))
+
+"Local" (
+IF(@SPARENTVAL(Brand, "HVolAloITot") <> 0 AND (@ROUND(@SPARENTVAL(Brand, "HVol9LAloBase"),10) == 0 OR @SPARENTVAL(Brand, "HVol9LAloBase") == #Missing) AND "HCon" -> "A" -> "Master" -> "Int" == 1)
+"Local" = 0.000000001;
+ENDIF
+)
+
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Aggregate Brand for calculation */
+FIX("HVol9LAloBase")
+FIX("BegBalance")
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX(@RELATIVE("Customer_Group",0))
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+@CHILDREN("Calculation_Group");
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ 
+/* Allocate Volume input from Brand level down to BrandPack level, based on pre-defined Scenario ratio, at YearTotal level */
+FIX("BegBalance")
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX(@RELATIVE("Customer_Group",0))
+
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("BrandPack_Group",0))
+"HVol9LAloSetOrg" = (@SPARENTVAL(Brand, "HVolAloITot") - @SPARENTVAL(Brand, "HVol9LAct" -> "YearTotal") - @SPARENTVAL(Brand, "HVol9LOO" -> "YearTotal")) * "HVol9LAloBase" / @SPARENTVAL(Brand, "HVol9LAloBase");
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Aggregate Brand for calculation */
+FIX("HVol9LAloSetOrg","HVol9LAloSetAdj")
+FIX("BegBalance")
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX(@RELATIVE("Customer_Group",0))
+
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+@CHILDREN("Calculation_Group");
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Calculate YearTotal to Month Allocation Ratio */
+FIX(&CurQYTDMonth:&CurQYTDEndMonth)
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX(@RELATIVE("Customer_Group",0))
+
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("BrandPack_Group",0))
+
+"HVolYearMonth_Init (%)"
+(
+"HVolYearMonth_Init (%)" = 1 / &AllocationQYTDFactor;
+)
+
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Allocate Volume from YearTotal to months, at BrandPack level, based on inputted Volume contributed to different price and effective month */
+FIX(&CurQYTDMonth:&CurQYTDEndMonth)
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX(@RELATIVE("Customer_Group",0))
+
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("BrandPack_Group",0))
+
+"HVol9LAlo" = "HVol9LAloSetTot" -> "BegBalance" * "HVolYearMonth_Init (%)";
+"HVol9LAlo" = @ROUND("HVol9LAlo",4);
+
+ENDFIX
+ENDFIX  
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Clear Data if the allocated volume is zero */
+FIX(&CurQYTDMonth:&CurQYTDEndMonth)
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX(@RELATIVE("Customer_Group",0))
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("BrandPack_Group",0))
+
+"HVol9LAlo"
+(
+IF("HVol9LAlo" == 0)
+"HVol9LAlo" = #Missing;
+ENDIF
+
+)
+ENDFIX
+ENDFIX  
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Aggregate Brand for calculation */
+FIX(@RELATIVE("HVol9LTot",0))
+FIX(&CurQYTDMonth:&CurQYTDEndMonth)
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX(@RELATIVE("Customer_Group",0))
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+@CHILDREN("Calculation_Group");
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ 
+/* Allocate Standard Costs to BrandPack and Customer level */
+FIX(&CurQYTDMonth:&CurQYTDEndMonth)
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("PRADF",0))
+FIX(@RELATIVE("BrandPack_Group",0))
+"HSC_Local." = @SPARENTVAL(Brand, "HSC_Local." -> "BegBalance" -> "PRADF_Input");
+"HSC_Local_B." = @SPARENTVAL(Brand, "HSC_Local_B." -> "BegBalance" -> "PRADF_Input");
+"HSC" = @SPARENTVAL(Brand, "HSC" -> "BegBalance" -> "PRADF_Input");
+"HSCCurr" = @SPARENTVAL(Brand, "HSCCurr" -> "BegBalance" -> "PRADF_Input");
+
+"HSCSec_Local." = @SPARENTVAL(Brand, "HSCSec_Local." -> "BegBalance" -> "PRADF_Input");
+"HSCSec_Local_B." = @SPARENTVAL(Brand, "HSCSec_Local_B." -> "BegBalance" -> "PRADF_Input");
+"HSCSec" = @SPARENTVAL(Brand, "HSCSec" -> "BegBalance" -> "PRADF_Input");
+"HSCSecCurr" = @SPARENTVAL(Brand, "HSCSecCurr" -> "BegBalance" -> "PRADF_Input");
+
+"HSCTer_Local." = @SPARENTVAL(Brand, "HSCTer_Local." -> "BegBalance"  -> "PRADF_Input");
+"HSCTer_Local_B." = @SPARENTVAL(Brand, "HSCTer_Local_B." -> "BegBalance"  -> "PRADF_Input");
+"HSCTer" = @SPARENTVAL(Brand, "HSCTer" -> "BegBalance" -> "PRADF_Input");
+"HSCTerCurr" = @SPARENTVAL(Brand, "HSCTerCurr" -> "BegBalance" -> "PRADF_Input");
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+FIX(&CurQYTDMonth:&CurQYTDEndMonth)
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("RTM",0))
+FIX(@RELATIVE("BrandPack_Group",0))
+"HSC_Local." = @SPARENTVAL(Brand, "HSC_Local." -> "BegBalance" -> "RTM_Input");
+"HSC_Local_B." = @SPARENTVAL(Brand, "HSC_Local_B." -> "BegBalance" -> "RTM_Input");
+"HSC" = @SPARENTVAL(Brand, "HSC" -> "BegBalance" -> "RTM_Input");
+"HSCCurr" = @SPARENTVAL(Brand, "HSCCurr" -> "BegBalance" -> "RTM_Input");
+
+"HSCSec_Local." = @SPARENTVAL(Brand, "HSCSec_Local." -> "BegBalance" -> "RTM_Input");
+"HSCSec_Local_B." = @SPARENTVAL(Brand, "HSCSec_Local_B." -> "BegBalance" -> "RTM_Input");
+"HSCSec" = @SPARENTVAL(Brand, "HSCSec" -> "BegBalance" -> "RTM_Input");
+"HSCSecCurr" = @SPARENTVAL(Brand, "HSCSecCurr" -> "BegBalance" -> "RTM_Input");
+
+"HSCTer_Local." = @SPARENTVAL(Brand, "HSCTer_Local." -> "BegBalance"  -> "RTM_Input");
+"HSCTer_Local_B." = @SPARENTVAL(Brand, "HSCTer_Local_B." -> "BegBalance"  -> "RTM_Input");
+"HSCTer" = @SPARENTVAL(Brand, "HSCTer" -> "BegBalance" -> "RTM_Input");
+"HSCTerCurr" = @SPARENTVAL(Brand, "HSCTerCurr" -> "BegBalance" -> "RTM_Input");
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+FIX(&CurQYTDMonth:&CurQYTDEndMonth)
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("PRCDF",0))
+FIX(@RELATIVE("BrandPack_Group",0))
+"HSC_Local." = @SPARENTVAL(Brand, "HSC_Local." -> "BegBalance" -> "PRCDF_Input");
+"HSC_Local_B." = @SPARENTVAL(Brand, "HSC_Local_B." -> "BegBalance" -> "PRCDF_Input");
+"HSC" = @SPARENTVAL(Brand, "HSC" -> "BegBalance" -> "PRCDF_Input");
+"HSCCurr" = @SPARENTVAL(Brand, "HSCCurr" -> "BegBalance" -> "PRCDF_Input");
+
+"HSCSec_Local." = @SPARENTVAL(Brand, "HSCSec_Local." -> "BegBalance" -> "PRCDF_Input");
+"HSCSec_Local_B." = @SPARENTVAL(Brand, "HSCSec_Local_B." -> "BegBalance" -> "PRCDF_Input");
+"HSCSec" = @SPARENTVAL(Brand, "HSCSec" -> "BegBalance" -> "PRCDF_Input");
+"HSCSecCurr" = @SPARENTVAL(Brand, "HSCSecCurr" -> "BegBalance" -> "PRCDF_Input");
+
+"HSCTer_Local." = @SPARENTVAL(Brand, "HSCTer_Local." -> "BegBalance"  -> "PRCDF_Input");
+"HSCTer_Local_B." = @SPARENTVAL(Brand, "HSCTer_Local_B." -> "BegBalance"  -> "PRCDF_Input");
+"HSCTer" = @SPARENTVAL(Brand, "HSCTer" -> "BegBalance" -> "PRCDF_Input");
+"HSCTerCurr" = @SPARENTVAL(Brand, "HSCTerCurr" -> "BegBalance" -> "PRCDF_Input");
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+FIX(&CurQYTDMonth:&CurQYTDEndMonth)
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("PRJDF",0))
+FIX(@RELATIVE("BrandPack_Group",0))
+"HSC_Local." = @SPARENTVAL(Brand, "HSC_Local." -> "BegBalance" -> "PRJDF_Input");
+"HSC_Local_B." = @SPARENTVAL(Brand, "HSC_Local_B." -> "BegBalance" -> "PRJDF_Input");
+"HSC" = @SPARENTVAL(Brand, "HSC" -> "BegBalance" -> "PRJDF_Input");
+"HSCCurr" = @SPARENTVAL(Brand, "HSCCurr" -> "BegBalance" -> "PRJDF_Input");
+
+"HSCSec_Local." = @SPARENTVAL(Brand, "HSCSec_Local." -> "BegBalance" -> "PRJDF_Input");
+"HSCSec_Local_B." = @SPARENTVAL(Brand, "HSCSec_Local_B." -> "BegBalance" -> "PRJDF_Input");
+"HSCSec" = @SPARENTVAL(Brand, "HSCSec" -> "BegBalance" -> "PRJDF_Input");
+"HSCSecCurr" = @SPARENTVAL(Brand, "HSCSecCurr" -> "BegBalance" -> "PRJDF_Input");
+
+"HSCTer_Local." = @SPARENTVAL(Brand, "HSCTer_Local." -> "BegBalance"  -> "PRJDF_Input");
+"HSCTer_Local_B." = @SPARENTVAL(Brand, "HSCTer_Local_B." -> "BegBalance"  -> "PRJDF_Input");
+"HSCTer" = @SPARENTVAL(Brand, "HSCTer" -> "BegBalance" -> "PRJDF_Input");
+"HSCTerCurr" = @SPARENTVAL(Brand, "HSCTerCurr" -> "BegBalance" -> "PRJDF_Input");
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+
+/* Allocate Volume Contributed to Original Price (%) amd Volume Contributed to Adjusted Price (%) to Allocated Volume */
+FIX(&CurQYTDMonth:&CurQYTDEndMonth)
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("BrandPack_Group",0))
+FIX(@RELATIVE("Customer_Group",0))
+
+"HVolOrgPrice" = ("HVol9LAlo" + "HVol9Ladj") * @SPARENTVAL(Brand, "HVolOrgPriceTotCust (%)");
+"HVolAdjPrice" = ("HVol9LAlo" + "HVol9Ladj") * @SPARENTVAL(Brand, "HVolAdjPriceCust (%)");
+
+ENDFIX
+ENDFIX  
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Set up block in Internal / External Adjustment for BrandPacks with Current Scenario Volume */
+FIX("HVol9LAct")
+FIX("BegBalance")
+FIX("Master")
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("Customer_Group",0))
+FIX(@RELATIVE("BrandPack_Group",0))
+
+"Int" (
+IF("HVol9LTot" -> "YearTotal" <> #Missing)
+"IntAdj" = 0;
+"ExtAdj" = 0;
+ENDIF
+)
+
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+
+
+
+
+
+
+
+
+
+
+
+
+Import Completed! 0 record(s) created.
+0 record(s) updated.
+Have Error in creating Temp SIT Data: 
+Row8: Invalid WS CRM No: 08125846
+Row9: Invalid WS CRM No: 08125846
+Row10: Invalid WS CRM No: 08125846
+Row11: Invalid WS CRM No: 08125846
+Row12: Invalid WS CRM No: 08125846
+Row13: Invalid WS CRM No: 08125846
+Row14: Invalid WS CRM No: 08125846
+Row15: Invalid WS CRM No: 08125846
+Row16: Invalid WS CRM No: 08125846
+Row17: Invalid WS CRM No: 08125846
+Row18: Invalid WS CRM No: 08125846
+Row19: Invalid WS
+
+
+
+
+
+
+
+
+
+
+
+SET CACHE HIGH;
+SET UPDATECALC OFF;
+SET CLEARUPDATESTATUS OFF;
+SET LOCKBLOCK HIGH;
+
+/* Clear Allocation Base before copying data from pre-defined scenario for calculation */
+FIX("BegBalance")
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX(@RELATIVE("Customer_Group",0))
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("BrandPack_Group",0))
+
+"HVol9LAloBase" = #Missing;
+"HVol9LAloSetOrg" = #Missing;
+
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Copy data from pre-defined scenario for Brand to BrandPack allocation */
+FIX("BegBalance")
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX(@RELATIVE("Customer_Group",0))
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("BrandPack_Group",0))
+
+"HVol9LAloBase" (
+IF("HCon" -> "A" -> "Master" -> "Int" == 1)
+"HVol9LAloBase" = @SUMRANGE("HVol9LAct" -> "Int", "Jul":&ActQYTDMonth) + @SUMRANGE("HVol9LOO" -> "Int", &CurMonth:&CurQYTDEndMonth);
+ENDIF
+)
+
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Aggregate Brand for calculation */
+FIX("HVolAloIOrg","HVolAloIAdj","HVol9LAloBase")
+FIX("BegBalance")
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX(@RELATIVE("Customer_Group",0))
+
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+
+@CHILDREN("Calculation_Group");
+
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Check if there is Volume inputted, but no allocation base, setup allocation base for equal allocation for those BrandPacks to be continued */
+FIX("HVol9LAloBase")
+FIX("BegBalance")
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX(@RELATIVE("Customer_Group",0))
+FIX("HSP_InputValue")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("BrandPack_Group",0))
+
+"Local" (
+IF(@SPARENTVAL(Brand, "HVolAloITot") <> 0 AND (@ROUND(@SPARENTVAL(Brand, "HVol9LAloBase"),10) == 0 OR @SPARENTVAL(Brand, "HVol9LAloBase") == #Missing) AND "HCon" -> "A" -> "Master" -> "Int" == 1)
+"Local" = 0.000000001;
+ENDIF
+)
+
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Aggregate Brand for calculation */
+FIX("HVol9LAloBase")
+FIX("BegBalance")
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX(@RELATIVE("Customer_Group",0))
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+@CHILDREN("Calculation_Group");
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ 
+/* Allocate Volume input from Brand level down to BrandPack level, based on pre-defined Scenario ratio, at YearTotal level */
+FIX("BegBalance")
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX(@RELATIVE("Customer_Group",0))
+
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("BrandPack_Group",0))
+"HVol9LAloSetOrg" = (@SPARENTVAL(Brand, "HVolAloITot") - @SPARENTVAL(Brand, "HVol9LAct" -> "YearTotal") - @SPARENTVAL(Brand, "HVol9LOO" -> "YearTotal")) * "HVol9LAloBase" / @SPARENTVAL(Brand, "HVol9LAloBase");
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Aggregate Brand for calculation */
+FIX("HVol9LAloSetOrg","HVol9LAloSetAdj")
+FIX("BegBalance")
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX(@RELATIVE("Customer_Group",0))
+
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+@CHILDREN("Calculation_Group");
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Calculate YearTotal to Month Allocation Ratio */
+FIX(&CurQYTDMonth:&CurQYTDEndMonth)
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX(@RELATIVE("Customer_Group",0))
+
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("BrandPack_Group",0))
+
+"HVolYearMonth_Init (%)"
+(
+"HVolYearMonth_Init (%)" = 1 / &AllocationQYTDFactor;
+)
+
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Allocate Volume from YearTotal to months, at BrandPack level, based on inputted Volume contributed to different price and effective month */
+FIX(&CurQYTDMonth:&CurQYTDEndMonth)
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX(@RELATIVE("Customer_Group",0))
+
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("BrandPack_Group",0))
+
+"HVol9LAlo" = "HVol9LAloSetTot" -> "BegBalance" * "HVolYearMonth_Init (%)";
+"HVol9LAlo" = @ROUND("HVol9LAlo",4);
+
+ENDFIX
+ENDFIX  
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Clear Data if the allocated volume is zero */
+FIX(&CurQYTDMonth:&CurQYTDEndMonth)
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX(@RELATIVE("Customer_Group",0))
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("BrandPack_Group",0))
+
+"HVol9LAlo"
+(
+IF("HVol9LAlo" == 0)
+"HVol9LAlo" = #Missing;
+ENDIF
+
+)
+ENDFIX
+ENDFIX  
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Aggregate Brand for calculation */
+FIX(@RELATIVE("HVol9LTot",0))
+FIX(&CurQYTDMonth:&CurQYTDEndMonth)
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX(@RELATIVE("Customer_Group",0))
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+@CHILDREN("Calculation_Group");
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ 
+/* Allocate Standard Costs to BrandPack and Customer level */
+FIX(&CurQYTDMonth:&CurQYTDEndMonth)
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("PRADF",0))
+FIX(@RELATIVE("BrandPack_Group",0))
+"HSC_Local." = @SPARENTVAL(Brand, "HSC_Local." -> "BegBalance" -> "PRADF_Input");
+"HSC_Local_B." = @SPARENTVAL(Brand, "HSC_Local_B." -> "BegBalance" -> "PRADF_Input");
+"HSC" = @SPARENTVAL(Brand, "HSC" -> "BegBalance" -> "PRADF_Input");
+"HSCCurr" = @SPARENTVAL(Brand, "HSCCurr" -> "BegBalance" -> "PRADF_Input");
+
+"HSCSec_Local." = @SPARENTVAL(Brand, "HSCSec_Local." -> "BegBalance" -> "PRADF_Input");
+"HSCSec_Local_B." = @SPARENTVAL(Brand, "HSCSec_Local_B." -> "BegBalance" -> "PRADF_Input");
+"HSCSec" = @SPARENTVAL(Brand, "HSCSec" -> "BegBalance" -> "PRADF_Input");
+"HSCSecCurr" = @SPARENTVAL(Brand, "HSCSecCurr" -> "BegBalance" -> "PRADF_Input");
+
+"HSCTer_Local." = @SPARENTVAL(Brand, "HSCTer_Local." -> "BegBalance"  -> "PRADF_Input");
+"HSCTer_Local_B." = @SPARENTVAL(Brand, "HSCTer_Local_B." -> "BegBalance"  -> "PRADF_Input");
+"HSCTer" = @SPARENTVAL(Brand, "HSCTer" -> "BegBalance" -> "PRADF_Input");
+"HSCTerCurr" = @SPARENTVAL(Brand, "HSCTerCurr" -> "BegBalance" -> "PRADF_Input");
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+FIX(&CurQYTDMonth:&CurQYTDEndMonth)
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("RTM",0))
+FIX(@RELATIVE("BrandPack_Group",0))
+"HSC_Local." = @SPARENTVAL(Brand, "HSC_Local." -> "BegBalance" -> "RTM_Input");
+"HSC_Local_B." = @SPARENTVAL(Brand, "HSC_Local_B." -> "BegBalance" -> "RTM_Input");
+"HSC" = @SPARENTVAL(Brand, "HSC" -> "BegBalance" -> "RTM_Input");
+"HSCCurr" = @SPARENTVAL(Brand, "HSCCurr" -> "BegBalance" -> "RTM_Input");
+
+"HSCSec_Local." = @SPARENTVAL(Brand, "HSCSec_Local." -> "BegBalance" -> "RTM_Input");
+"HSCSec_Local_B." = @SPARENTVAL(Brand, "HSCSec_Local_B." -> "BegBalance" -> "RTM_Input");
+"HSCSec" = @SPARENTVAL(Brand, "HSCSec" -> "BegBalance" -> "RTM_Input");
+"HSCSecCurr" = @SPARENTVAL(Brand, "HSCSecCurr" -> "BegBalance" -> "RTM_Input");
+
+"HSCTer_Local." = @SPARENTVAL(Brand, "HSCTer_Local." -> "BegBalance"  -> "RTM_Input");
+"HSCTer_Local_B." = @SPARENTVAL(Brand, "HSCTer_Local_B." -> "BegBalance"  -> "RTM_Input");
+"HSCTer" = @SPARENTVAL(Brand, "HSCTer" -> "BegBalance" -> "RTM_Input");
+"HSCTerCurr" = @SPARENTVAL(Brand, "HSCTerCurr" -> "BegBalance" -> "RTM_Input");
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+FIX(&CurQYTDMonth:&CurQYTDEndMonth)
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("PRCDF",0))
+FIX(@RELATIVE("BrandPack_Group",0))
+"HSC_Local." = @SPARENTVAL(Brand, "HSC_Local." -> "BegBalance" -> "PRCDF_Input");
+"HSC_Local_B." = @SPARENTVAL(Brand, "HSC_Local_B." -> "BegBalance" -> "PRCDF_Input");
+"HSC" = @SPARENTVAL(Brand, "HSC" -> "BegBalance" -> "PRCDF_Input");
+"HSCCurr" = @SPARENTVAL(Brand, "HSCCurr" -> "BegBalance" -> "PRCDF_Input");
+
+"HSCSec_Local." = @SPARENTVAL(Brand, "HSCSec_Local." -> "BegBalance" -> "PRCDF_Input");
+"HSCSec_Local_B." = @SPARENTVAL(Brand, "HSCSec_Local_B." -> "BegBalance" -> "PRCDF_Input");
+"HSCSec" = @SPARENTVAL(Brand, "HSCSec" -> "BegBalance" -> "PRCDF_Input");
+"HSCSecCurr" = @SPARENTVAL(Brand, "HSCSecCurr" -> "BegBalance" -> "PRCDF_Input");
+
+"HSCTer_Local." = @SPARENTVAL(Brand, "HSCTer_Local." -> "BegBalance"  -> "PRCDF_Input");
+"HSCTer_Local_B." = @SPARENTVAL(Brand, "HSCTer_Local_B." -> "BegBalance"  -> "PRCDF_Input");
+"HSCTer" = @SPARENTVAL(Brand, "HSCTer" -> "BegBalance" -> "PRCDF_Input");
+"HSCTerCurr" = @SPARENTVAL(Brand, "HSCTerCurr" -> "BegBalance" -> "PRCDF_Input");
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+FIX(&CurQYTDMonth:&CurQYTDEndMonth)
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("PRJDF",0))
+FIX(@RELATIVE("BrandPack_Group",0))
+"HSC_Local." = @SPARENTVAL(Brand, "HSC_Local." -> "BegBalance" -> "PRJDF_Input");
+"HSC_Local_B." = @SPARENTVAL(Brand, "HSC_Local_B." -> "BegBalance" -> "PRJDF_Input");
+"HSC" = @SPARENTVAL(Brand, "HSC" -> "BegBalance" -> "PRJDF_Input");
+"HSCCurr" = @SPARENTVAL(Brand, "HSCCurr" -> "BegBalance" -> "PRJDF_Input");
+
+"HSCSec_Local." = @SPARENTVAL(Brand, "HSCSec_Local." -> "BegBalance" -> "PRJDF_Input");
+"HSCSec_Local_B." = @SPARENTVAL(Brand, "HSCSec_Local_B." -> "BegBalance" -> "PRJDF_Input");
+"HSCSec" = @SPARENTVAL(Brand, "HSCSec" -> "BegBalance" -> "PRJDF_Input");
+"HSCSecCurr" = @SPARENTVAL(Brand, "HSCSecCurr" -> "BegBalance" -> "PRJDF_Input");
+
+"HSCTer_Local." = @SPARENTVAL(Brand, "HSCTer_Local." -> "BegBalance"  -> "PRJDF_Input");
+"HSCTer_Local_B." = @SPARENTVAL(Brand, "HSCTer_Local_B." -> "BegBalance"  -> "PRJDF_Input");
+"HSCTer" = @SPARENTVAL(Brand, "HSCTer" -> "BegBalance" -> "PRJDF_Input");
+"HSCTerCurr" = @SPARENTVAL(Brand, "HSCTerCurr" -> "BegBalance" -> "PRJDF_Input");
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+
+/* Allocate Volume Contributed to Original Price (%) amd Volume Contributed to Adjusted Price (%) to Allocated Volume */
+FIX(&CurQYTDMonth:&CurQYTDEndMonth)
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("BrandPack_Group",0))
+FIX(@RELATIVE("Customer_Group",0))
+
+"HVolOrgPrice" = ("HVol9LAlo" + "HVol9Ladj") * @SPARENTVAL(Brand, "HVolOrgPriceTotCust (%)");
+"HVolAdjPrice" = ("HVol9LAlo" + "HVol9Ladj") * @SPARENTVAL(Brand, "HVolAdjPriceCust (%)");
+
+ENDFIX
+ENDFIX  
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Set up block in Internal / External Adjustment for BrandPacks with Current Scenario Volume */
+FIX("HVol9LAct")
+FIX("BegBalance")
+FIX("Master")
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("Customer_Group",0))
+FIX(@RELATIVE("BrandPack_Group",0))
+
+"Int" (
+IF("HVol9LTot" -> "YearTotal" <> #Missing)
+"IntAdj" = 0;
+"ExtAdj" = 0;
+ENDIF
+)
+
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+
+
+
+
+
+
+
+SET CACHE HIGH;
+SET UPDATECALC OFF;
+SET CLEARUPDATESTATUS OFF;
+SET LOCKBLOCK HIGH;
+
+/* Clear Allocation Base before copying data from pre-defined scenario for calculation */
+FIX("BegBalance")
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX(@RELATIVE("Customer_Group",0))
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("BrandPack_Group",0))
+
+"HVol9LAloBase" = #Missing;
+"HVol9LAloSetOrg" = #Missing;
+
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Copy data from pre-defined scenario for Brand to BrandPack allocation */
+FIX("BegBalance")
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX(@RELATIVE("Customer_Group",0))
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("BrandPack_Group",0))
+
+"HVol9LAloBase" (
+IF("HCon" -> "A" -> "Master" -> "Int" == 1)
+"HVol9LAloBase" = @SUMRANGE("HVol9LAct" -> "Int", "Jul":&ActQYTDMonth) + @SUMRANGE("HVol9LOO" -> "Int", &CurMonth:&CurQYTDEndMonth);
+ENDIF
+)
+
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Aggregate Brand for calculation */
+FIX("HVolAloIOrg","HVolAloIAdj","HVol9LAloBase")
+FIX("BegBalance")
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX(@RELATIVE("Customer_Group",0))
+
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+
+@CHILDREN("Calculation_Group");
+
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Check if there is Volume inputted, but no allocation base, setup allocation base for equal allocation for those BrandPacks to be continued */
+FIX("HVol9LAloBase")
+FIX("BegBalance")
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX(@RELATIVE("Customer_Group",0))
+FIX("HSP_InputValue")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("BrandPack_Group",0))
+
+"Local" (
+IF(@SPARENTVAL(Brand, "HVolAloITot") > 0 AND (@ROUND(@SPARENTVAL(Brand, "HVol9LAloBase"),10) == 0 OR @SPARENTVAL(Brand, "HVol9LAloBase") == #Missing) AND "HCon" -> "A" -> "Master" -> "Int" == 1)
+"Local" = 0.000000001;
+ENDIF
+)
+
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Aggregate Brand for calculation */
+FIX("HVol9LAloBase")
+FIX("BegBalance")
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX(@RELATIVE("Customer_Group",0))
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+@CHILDREN("Calculation_Group");
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ 
+/* Allocate Volume input from Brand level down to BrandPack level, based on pre-defined Scenario ratio, at YearTotal level */
+FIX("BegBalance")
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX(@RELATIVE("Customer_Group",0))
+
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("BrandPack_Group",0))
+"HVol9LAloSetOrg" = (@SPARENTVAL(Brand, "HVolAloITot") - @SPARENTVAL(Brand, "HVol9LAct" -> "YearTotal") - @SPARENTVAL(Brand, "HVol9LOO" -> "YearTotal")) * "HVol9LAloBase" / @SPARENTVAL(Brand, "HVol9LAloBase");
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Aggregate Brand for calculation */
+FIX("HVol9LAloSetOrg","HVol9LAloSetAdj")
+FIX("BegBalance")
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX(@RELATIVE("Customer_Group",0))
+
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+@CHILDREN("Calculation_Group");
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Calculate YearTotal to Month Allocation Ratio */
+FIX(&CurQYTDMonth:&CurQYTDEndMonth)
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX(@RELATIVE("Customer_Group",0))
+
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("BrandPack_Group",0))
+
+"HVolYearMonth_Init (%)"
+(
+"HVolYearMonth_Init (%)" = 1 / &AllocationQYTDFactor;
+)
+
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Allocate Volume from YearTotal to months, at BrandPack level, based on inputted Volume contributed to different price and effective month */
+FIX(&CurQYTDMonth:&CurQYTDEndMonth)
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX(@RELATIVE("Customer_Group",0))
+
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("BrandPack_Group",0))
+
+"HVol9LAlo" = "HVol9LAloSetTot" -> "BegBalance" * "HVolYearMonth_Init (%)";
+"HVol9LAlo" = @ROUND("HVol9LAlo",4);
+
+ENDFIX
+ENDFIX  
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Clear Data if the allocated volume is zero */
+FIX(&CurQYTDMonth:&CurQYTDEndMonth)
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX(@RELATIVE("Customer_Group",0))
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("BrandPack_Group",0))
+
+"HVol9LAlo"
+(
+IF("HVol9LAlo" == 0)
+"HVol9LAlo" = #Missing;
+ENDIF
+
+)
+ENDFIX
+ENDFIX  
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Aggregate Brand for calculation */
+FIX(@RELATIVE("HVol9LTot",0))
+FIX(&CurQYTDMonth:&CurQYTDEndMonth)
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX(@RELATIVE("Customer_Group",0))
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+@CHILDREN("Calculation_Group");
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ 
+/* Allocate Standard Costs to BrandPack and Customer level */
+FIX(&CurQYTDMonth:&CurQYTDEndMonth)
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("PRADF",0))
+FIX(@RELATIVE("BrandPack_Group",0))
+"HSC_Local." = @SPARENTVAL(Brand, "HSC_Local." -> "BegBalance" -> "PRADF_Input");
+"HSC_Local_B." = @SPARENTVAL(Brand, "HSC_Local_B." -> "BegBalance" -> "PRADF_Input");
+"HSC" = @SPARENTVAL(Brand, "HSC" -> "BegBalance" -> "PRADF_Input");
+"HSCCurr" = @SPARENTVAL(Brand, "HSCCurr" -> "BegBalance" -> "PRADF_Input");
+
+"HSCSec_Local." = @SPARENTVAL(Brand, "HSCSec_Local." -> "BegBalance" -> "PRADF_Input");
+"HSCSec_Local_B." = @SPARENTVAL(Brand, "HSCSec_Local_B." -> "BegBalance" -> "PRADF_Input");
+"HSCSec" = @SPARENTVAL(Brand, "HSCSec" -> "BegBalance" -> "PRADF_Input");
+"HSCSecCurr" = @SPARENTVAL(Brand, "HSCSecCurr" -> "BegBalance" -> "PRADF_Input");
+
+"HSCTer_Local." = @SPARENTVAL(Brand, "HSCTer_Local." -> "BegBalance"  -> "PRADF_Input");
+"HSCTer_Local_B." = @SPARENTVAL(Brand, "HSCTer_Local_B." -> "BegBalance"  -> "PRADF_Input");
+"HSCTer" = @SPARENTVAL(Brand, "HSCTer" -> "BegBalance" -> "PRADF_Input");
+"HSCTerCurr" = @SPARENTVAL(Brand, "HSCTerCurr" -> "BegBalance" -> "PRADF_Input");
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+FIX(&CurQYTDMonth:&CurQYTDEndMonth)
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("RTM",0))
+FIX(@RELATIVE("BrandPack_Group",0))
+"HSC_Local." = @SPARENTVAL(Brand, "HSC_Local." -> "BegBalance" -> "RTM_Input");
+"HSC_Local_B." = @SPARENTVAL(Brand, "HSC_Local_B." -> "BegBalance" -> "RTM_Input");
+"HSC" = @SPARENTVAL(Brand, "HSC" -> "BegBalance" -> "RTM_Input");
+"HSCCurr" = @SPARENTVAL(Brand, "HSCCurr" -> "BegBalance" -> "RTM_Input");
+
+"HSCSec_Local." = @SPARENTVAL(Brand, "HSCSec_Local." -> "BegBalance" -> "RTM_Input");
+"HSCSec_Local_B." = @SPARENTVAL(Brand, "HSCSec_Local_B." -> "BegBalance" -> "RTM_Input");
+"HSCSec" = @SPARENTVAL(Brand, "HSCSec" -> "BegBalance" -> "RTM_Input");
+"HSCSecCurr" = @SPARENTVAL(Brand, "HSCSecCurr" -> "BegBalance" -> "RTM_Input");
+
+"HSCTer_Local." = @SPARENTVAL(Brand, "HSCTer_Local." -> "BegBalance"  -> "RTM_Input");
+"HSCTer_Local_B." = @SPARENTVAL(Brand, "HSCTer_Local_B." -> "BegBalance"  -> "RTM_Input");
+"HSCTer" = @SPARENTVAL(Brand, "HSCTer" -> "BegBalance" -> "RTM_Input");
+"HSCTerCurr" = @SPARENTVAL(Brand, "HSCTerCurr" -> "BegBalance" -> "RTM_Input");
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+FIX(&CurQYTDMonth:&CurQYTDEndMonth)
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("PRCDF",0))
+FIX(@RELATIVE("BrandPack_Group",0))
+"HSC_Local." = @SPARENTVAL(Brand, "HSC_Local." -> "BegBalance" -> "PRCDF_Input");
+"HSC_Local_B." = @SPARENTVAL(Brand, "HSC_Local_B." -> "BegBalance" -> "PRCDF_Input");
+"HSC" = @SPARENTVAL(Brand, "HSC" -> "BegBalance" -> "PRCDF_Input");
+"HSCCurr" = @SPARENTVAL(Brand, "HSCCurr" -> "BegBalance" -> "PRCDF_Input");
+
+"HSCSec_Local." = @SPARENTVAL(Brand, "HSCSec_Local." -> "BegBalance" -> "PRCDF_Input");
+"HSCSec_Local_B." = @SPARENTVAL(Brand, "HSCSec_Local_B." -> "BegBalance" -> "PRCDF_Input");
+"HSCSec" = @SPARENTVAL(Brand, "HSCSec" -> "BegBalance" -> "PRCDF_Input");
+"HSCSecCurr" = @SPARENTVAL(Brand, "HSCSecCurr" -> "BegBalance" -> "PRCDF_Input");
+
+"HSCTer_Local." = @SPARENTVAL(Brand, "HSCTer_Local." -> "BegBalance"  -> "PRCDF_Input");
+"HSCTer_Local_B." = @SPARENTVAL(Brand, "HSCTer_Local_B." -> "BegBalance"  -> "PRCDF_Input");
+"HSCTer" = @SPARENTVAL(Brand, "HSCTer" -> "BegBalance" -> "PRCDF_Input");
+"HSCTerCurr" = @SPARENTVAL(Brand, "HSCTerCurr" -> "BegBalance" -> "PRCDF_Input");
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+FIX(&CurQYTDMonth:&CurQYTDEndMonth)
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("PRJDF",0))
+FIX(@RELATIVE("BrandPack_Group",0))
+"HSC_Local." = @SPARENTVAL(Brand, "HSC_Local." -> "BegBalance" -> "PRJDF_Input");
+"HSC_Local_B." = @SPARENTVAL(Brand, "HSC_Local_B." -> "BegBalance" -> "PRJDF_Input");
+"HSC" = @SPARENTVAL(Brand, "HSC" -> "BegBalance" -> "PRJDF_Input");
+"HSCCurr" = @SPARENTVAL(Brand, "HSCCurr" -> "BegBalance" -> "PRJDF_Input");
+
+"HSCSec_Local." = @SPARENTVAL(Brand, "HSCSec_Local." -> "BegBalance" -> "PRJDF_Input");
+"HSCSec_Local_B." = @SPARENTVAL(Brand, "HSCSec_Local_B." -> "BegBalance" -> "PRJDF_Input");
+"HSCSec" = @SPARENTVAL(Brand, "HSCSec" -> "BegBalance" -> "PRJDF_Input");
+"HSCSecCurr" = @SPARENTVAL(Brand, "HSCSecCurr" -> "BegBalance" -> "PRJDF_Input");
+
+"HSCTer_Local." = @SPARENTVAL(Brand, "HSCTer_Local." -> "BegBalance"  -> "PRJDF_Input");
+"HSCTer_Local_B." = @SPARENTVAL(Brand, "HSCTer_Local_B." -> "BegBalance"  -> "PRJDF_Input");
+"HSCTer" = @SPARENTVAL(Brand, "HSCTer" -> "BegBalance" -> "PRJDF_Input");
+"HSCTerCurr" = @SPARENTVAL(Brand, "HSCTerCurr" -> "BegBalance" -> "PRJDF_Input");
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+
+/* Allocate Volume Contributed to Original Price (%) amd Volume Contributed to Adjusted Price (%) to Allocated Volume */
+FIX(&CurQYTDMonth:&CurQYTDEndMonth)
+FIX("Master")
+FIX("Int","IntAdj","ExtAdj")
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("BrandPack_Group",0))
+FIX(@RELATIVE("Customer_Group",0))
+
+"HVolOrgPrice" = ("HVol9LAlo" + "HVol9Ladj") * @SPARENTVAL(Brand, "HVolOrgPriceTotCust (%)");
+"HVolAdjPrice" = ("HVol9LAlo" + "HVol9Ladj") * @SPARENTVAL(Brand, "HVolAdjPriceCust (%)");
+
+ENDFIX
+ENDFIX  
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Set up block in Internal / External Adjustment for BrandPacks with Current Scenario Volume */
+FIX("HVol9LAct")
+FIX("BegBalance")
+FIX("Master")
+FIX("HSP_InputValue")
+FIX("Local")
+FIX(&CurYear)
+FIX(&CurQYTDScenario)
+FIX("No_Department")
+FIX(@RELATIVE("Customer_Group",0))
+FIX(@RELATIVE("BrandPack_Group",0))
+
+"Int" (
+IF("HVol9LTot" -> "YearTotal" <> #Missing)
+"IntAdj" = 0;
+"ExtAdj" = 0;
+ENDIF
+)
+
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
