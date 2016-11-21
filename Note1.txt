@@ -1760,3 +1760,2228 @@ ENDFIX
 ENDFIX
 ENDFIX
 ENDFIX
+
+
+public class ASI_CRM_ADPasswordController {
+Public user UserDetail {
+get;
+set;
+}
+public boolean SaveSuccess {
+get;
+set;
+}
+public boolean UpsertPermission {
+get;
+set;
+}
+public string msg {
+get;
+set;
+}
+
+
+public string passwords {
+get;
+set;
+} {
+passwords = '';
+}
+
+
+public boolean havePassword {
+get;
+set;
+}
+
+
+public ASI_CRM_ADPasswordController() {
+init();
+
+
+}
+
+
+public void init() {
+SaveSuccess = false;
+
+
+UpsertPermission = true;
+msg = '';
+UserDetail = [Select Title, Department, ADDomainUser__c, ASI_CRM_AD_Password__c, CompanyName, FirstName, LastName, SmallPhotoUrl, FullPhotoUrl From User where id =: Userinfo.getUserid()];
+if (UserDetail.ASI_CRM_AD_Password__c != null) {
+havePassword = true;
+} else {
+havePassword = false;
+}
+
+
+}
+
+
+
+
+public void save() {
+
+
+System.Savepoint pSavepoint = Database.setSavepoint();
+try {
+UserDetail.ASI_CRM_AD_Password__c = passwords;
+update UserDetail;
+SaveSuccess = true;
+} catch (Exception e) {
+UpsertPermission = false;
+msg += 'Save Error : ' + e.getMessage() + '</br>';
+Database.rollback(pSavepoint);
+}
+}
+
+
+public void ResetPassword() {
+passwords = null;
+SaveSuccess = false;
+havePassword = false;
+}
+
+
+
+
+}
+
+
+
+public class ASI_CRM_ADPasswordController {
+    Public user UserDetail {
+        get;
+        set;
+    }
+    public boolean SaveSuccess {
+        get;
+        set;
+    }
+    public boolean UpsertPermission {
+        get;
+        set;
+    }
+    public string msg {
+        get;
+        set;
+    }
+    public string passwords {
+        get;
+        set;
+    } {
+        passwords = '';
+    }
+    public boolean havePassword {
+        get;
+        set;
+    }
+    public ASI_CRM_ADPasswordController() {
+        init();
+    }
+    public void init() {
+        SaveSuccess = false;
+        UpsertPermission = true;
+        msg = '';
+        UserDetail = [Select Title, Department, ADDomainUser__c, ASI_CRM_AD_Password__c, CompanyName, FirstName, LastName, SmallPhotoUrl, FullPhotoUrl From User where id =: Userinfo.getUserid()];
+        if (UserDetail.ASI_CRM_AD_Password__c != null) {
+            havePassword = true;
+        } else {
+            havePassword = false;
+        }
+    }
+    public void save() {
+        System.Savepoint pSavepoint = Database.setSavepoint();
+        try {
+            UserDetail.ASI_CRM_AD_Password__c = passwords;
+            update UserDetail;
+            SaveSuccess = true;
+        } catch (Exception e) {
+            UpsertPermission = false;
+            msg += 'Save Error : ' + e.getMessage() + '</br>';
+            Database.rollback(pSavepoint);
+        }
+    }
+    public void ResetPassword() {
+        passwords = null;
+        SaveSuccess = false;
+        havePassword = false;
+    }
+}
+
+
+
+
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	
+<head>
+    <title>Code Beautifier</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://codemirror.net/lib/codemirror.css" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/TonyRenHK/TonyRen/master/lib/beautify.js"></script>
+
+    <script src="https://cdn.rawgit.com/beautify-web/js-beautify/master/js/lib/beautify-css.js"></script>
+    <script src="https://cdn.rawgit.com/beautify-web/js-beautify/master/js/lib/beautify-html.js"></script>
+    <script type="text/javascript" src="https://codemirror.net/lib/codemirror.js"></script>
+    <script type="text/javascript" src="https://codemirror.net/addon/runmode/runmode.js"></script>
+    <script type="text/javascript" src="https://codemirror.net/mode/javascript/javascript.js"></script>
+	 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	 <script src="https://cdn.rawgit.com/zenorocha/clipboard.js/v1.5.10/dist/clipboard.min.js"></script>
+	
+	
+    <script type="text/javascript">
+        var the = {
+            use_codemirror: (!window.location.href.match(/without-codemirror/)),
+            editor: null
+        };
+
+        $(document).ready(function() {
+            var textArea = $('#code')[0];
+            the.editor = CodeMirror.fromTextArea(textArea, {
+                theme: 'default',
+                lineNumbers: true
+            });
+		
+            the.editor.focus();
+		
+	
+		 var clipboard = new Clipboard('#copybtn', {
+        target: function() {
+            return the.editor.getValue();
+        }
+    });
+		
+		clipboard.on('success', function(e) {
+		console.log(e);
+		});
+		clipboard.on('error', function(e) {
+		console.log(e);
+		});
+        });
+
+        function looks_like_html(source) {
+            // <foo> - looks like html
+            // <!--\nalert('foo!');\n--> - doesn't look like html
+
+            var trimmed = source.replace(/^[ \t\n\r]+/, '');
+            var comment_mark = '<' + '!-' + '-';
+            return (trimmed && (trimmed.substring(0, 1) === '<' && trimmed.substring(0, 4) !== comment_mark));
+        }
+
+  
+        function Beautify() {
+            //$('#code').val(), ()document.getElementById("code").value,
+            var source = the.editor ? the.editor.getValue() : $('#code').val(),
+                output,
+                opts = {};
+
+            if (looks_like_html(source)) {
+                output = html_beautify(source, opts);
+            } else {
+                output = js_beautify(source, opts);
+            }
+
+            if (the.editor) {
+                the.editor.setValue(output);
+            } else {
+                $('#source').val(output);
+            }
+        }
+    </script>
+</head>
+
+<body>
+
+
+    <textarea id="code" rows="30" cols="160" class="form-control" ></textarea>
+	
+    <br/>
+
+    <input type="button" onclick="Beautify()"  value="Formatting " class="btn btn-default" />
+<button class="btn btn-default" id="copybtn" >
+    Cut to clipboard
+</button>
+	
+	
+</body>
+
+</html>
+
+
+
+
+public class ASI_CRM_ADPasswordController {    Public user UserDetail {        get;        set;    }    public boolean SaveSuccess {        get;        set;    }    public boolean UpsertPermission {        get;        set;    }    public string msg {        get;        set;    }    public string passwords {        get;        set;    } {        passwords = '';    }    public boolean havePassword {        get;        set;    }    public ASI_CRM_ADPasswordController() {        init();    }    public void init() {        SaveSuccess = false;        UpsertPermission = true;        msg = '';        UserDetail = [Select Title, Department, ADDomainUser__c, ASI_CRM_AD_Password__c, CompanyName, FirstName, LastName, SmallPhotoUrl, FullPhotoUrl From User where id =: Userinfo.getUserid()];        if (UserDetail.ASI_CRM_AD_Password__c != null) {            havePassword = true;        } else {            havePassword = false;        }    }    public void save() {        System.Savepoint pSavepoint = Database.setSavepoint();        try {            UserDetail.ASI_CRM_AD_Password__c = passwords;            update UserDetail;            SaveSuccess = true;        } catch (Exception e) {            UpsertPermission = false;            msg += 'Save Error : ' + e.getMessage() + '</br>';            Database.rollback(pSavepoint);        }    }    public void ResetPassword() {        passwords = null;        SaveSuccess = false;        havePassword = false;    }}
+
+
+
+
+
+
+
+public class ASI_CRM_ADPasswordController {
+    Public user UserDetail {
+        get;
+        set;
+    }
+    public boolean SaveSuccess {
+        get;
+        set;
+    }
+    public boolean UpsertPermission {
+        get;
+        set;
+    }
+    public string msg {
+        get;
+        set;
+    }
+    public string passwords {
+        get;
+        set;
+    } {
+        passwords = '';
+    }
+    public boolean havePassword {
+        get;
+        set;
+    }
+    public ASI_CRM_ADPasswordController() {
+        init();
+    }
+    public void init() {
+        SaveSuccess = false;
+        UpsertPermission = true;
+        msg = '';
+        UserDetail = [Select Title, Department, ADDomainUser__c, ASI_CRM_AD_Password__c, CompanyName, FirstName, LastName, SmallPhotoUrl, FullPhotoUrl From User where id =: Userinfo.getUserid()];
+        if (UserDetail.ASI_CRM_AD_Password__c != null) {
+            havePassword = true;
+        } else {
+            havePassword = false;
+        }
+    }
+    public void save() {
+        System.Savepoint pSavepoint = Database.setSavepoint();
+        try {
+            UserDetail.ASI_CRM_AD_Password__c = passwords;
+            update UserDetail;
+            SaveSuccess = true;
+        } catch (Exception e) {
+            UpsertPermission = false;
+            msg += 'Save Error : ' + e.getMessage() + '</br>';
+            Database.rollback(pSavepoint);
+        }
+    }
+    public void ResetPassword() {
+        passwords = null;
+        SaveSuccess = false;
+        havePassword = false;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+public class ASI_CRM_ADPasswordController {
+    Public user UserDetail {
+        get;
+        set;
+    }
+    public boolean SaveSuccess {
+        get;
+        set;
+    }
+    public boolean UpsertPermission {
+        get;
+        set;
+    }
+    public string msg {
+        get;
+        set;
+    }
+    public string passwords {
+        get;
+        set;
+    } {
+        passwords = '';
+    }
+    public boolean havePassword {
+        get;
+        set;
+    }
+    public ASI_CRM_ADPasswordController() {
+        init();
+    }
+    public void init() {
+        SaveSuccess = false;
+        UpsertPermission = true;
+        msg = '';
+        UserDetail = [Select Title, Department, ADDomainUser__c, ASI_CRM_AD_Password__c, CompanyName, FirstName, LastName, SmallPhotoUrl, FullPhotoUrl From User where id =: Userinfo.getUserid()];
+        if (UserDetail.ASI_CRM_AD_Password__c != null) {
+            havePassword = true;
+        } else {
+            havePassword = false;
+        }
+    }
+    public void save() {
+        System.Savepoint pSavepoint = Database.setSavepoint();
+        try {
+            UserDetail.ASI_CRM_AD_Password__c = passwords;
+            update UserDetail;
+            SaveSuccess = true;
+        } catch (Exception e) {
+            UpsertPermission = false;
+            msg += 'Save Error : ' + e.getMessage() + '</br>';
+            Database.rollback(pSavepoint);
+        }
+    }
+    public void ResetPassword() {
+        passwords = null;
+        SaveSuccess = false;
+        havePassword = false;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+SET CACHE HIGH;
+SET UPDATECALC OFF;
+
+SET CLEARUPDATESTATUS OFF;
+SET LOCKBLOCK HIGH;
+
+SET CREATEBLOCKONEQ ON;
+FIX("Int" ,"BegBalance" ,"HSP_InputValue" ,{INHSP_Version}, "Total_Entity" ,"FY08" ,"No_Factory" ,"No_Department" ,"LE4" ,"HST")
+FIX("No_Brand")
+
+"Local" (
+IF (/*@ANCESTVAL("Entity",1,{INHSP_Ent}) > 0 or 
+@ANCESTVAL("Entity",2,{INHSP_Ent}) > 0 or 
+@ANCESTVAL("Entity",3,{INHSP_Ent}) > 0 or 
+@ANCESTVAL("Entity",4,{INHSP_Ent}) > 0 or 
+@ANCESTVAL("Entity",5,{INHSP_Ent}) > 0 or 
+@ANCESTVAL("Entity",6,{INHSP_Ent}) > 0 or 
+@ANCESTVAL("Entity",7,{INHSP_Ent}) > 0 or 
+@ANCESTVAL("Entity",8,{INHSP_Ent}) > 0 or */
+"Local" > 0)
+
+@RETURN ("INHSP_PL_Int rules has been triggered. Please wait for existing rule to complete running before triggering this rule again. Status of Business Rules can be checked from Tools -> Job Console", ERROR);
+
+ELSE
+
+/*"EXP_AFR_76003" = #Missing;*/
+"Local" = 1;
+/*@NAME({Rule_Entity}) = #Missing;*/
+
+ENDIF
+
+)
+
+ENDFIX
+ENDFIX
+
+SET CREATEBLOCKONEQ OFF;
+
+/* Update on 09-Jan-2012 for calculation of Transfer Price Region BII */
+/* Copy Transfer Price Region (BII) from Budget to Current Scenario. */
+/* Update on 16-Apr-2015 for calculation of Distribution Cost TP Region BII */
+/* Copy DC Transfer Price Region (BII) from Budget to Current Scenario. */
+FIX("HTPRAC","HTPR9L")
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+FIX("No_Factory")
+FIX("No_Department", "Local")
+FIX("No_Entity")
+FIX(@RELATIVE("RateArea_Group_Reporting_BII",0))
+FIX("Int")
+FIX(&CurMonth:"Jun")
+
+&CurScenario = "B";
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+
+FIX("HDCTPAC","HDCTP9L")
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+FIX(@RELATIVE("Other_Factory",0))
+FIX("No_Department", "Local")
+FIX(@RELATIVE("RateArea_Group_Reporting_BII",0))
+FIX("Int")
+FIX(&CurMonth:"Jun")
+&CurScenario = "B";
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/* Allocates Actual Cases and 9L Cases to Rate Areas under BII*/
+FIX("Int")
+FIX(&CurMonth:"Jun")
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+FIX("No_Factory")
+FIX("Local", &CurScenario, "No_Department")
+FIX(@RELATIVE("RateArea_Group_Reporting_BII",0))
+FIX(@RELATIVE("BrandPack_Group_BII",0))
+"HTPRAC" = "HTPRAC" -> "No_Entity" -> "No_Factory";
+"HTPR" = "HTPR9L" -> "No_Entity" -> "No_Factory";
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+
+/******* Calculate Internal Budgeting ***********/
+/* Calculate P&L account lines for Volume and Production(Brand-Pack Level) - BII */
+FIX(&CurMonth:"Jun")
+FIX("Int")
+FIX(@RELATIVE("Other_Factory",0), "No_Factory")
+FIX(@RELATIVE("RateArea_Group_Reporting_BII",0))
+FIX(@RELATIVE("BrandPack_Group_BII",0))
+FIX(&CurScenario,"No_Department", "Local")
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+"3010.K9L_CAL"
+(
+/* Calculate Volume (K9L) */
+"3010.K9L_CAL" = "HV9L" / 1000;
+/* Calculate Volume (KL) */
+"3010.KL_CAL" = "3010.K9L_CAL" * 9;
+/* Calculate Gross Sales Incl. T&D */
+"3010.GS_CAL" = "HNS" * "HV9L";
+/* HPCurr = 1 (INR), HPCurr = 2 (USD), HPCurr = 3 (GBP)*/
+/* INR */
+IF("HPCurr"->"BegBalance" == 1)
+"3010.GS_CAL_INR" = "HP" * "HV9L";
+/* USD */
+ELSEIF("HPCurr"->"BegBalance" == 2)
+"3010.GS_CAL_USD" = "HP" * "HV9L";
+/* GBP */
+ELSEIF("HPCurr"->"BegBalance" == 3)
+"3010.GS_CAL_GBP" = "HP" * "HV9L";
+ENDIF
+/* Calculate Production Cost Direct Overheads */
+"4010.PCDO_CAL" = "HPCDO" -> "No_Entity" * "HV9L" * -1;
+/* Calculate Production Cost Indirect Overheads */
+"6000.PCIO_CAL" = "HPCIO" * -1;
+/* Calculate Production Cost Depreciation */
+"9212.DP_CAL" = "HPCDP" * -1;
+/* Calculate Cost of Goods Sold ST/Non-ST */
+/* If Brand is Non-ST Brand */
+IF("HST" -> "BegBalance" -> "No_Factory" -> "No_Entity" -> "Int" > 0)
+"4010.NST_CAL" = "HCOGSNONST" -> "No_Entity" / "HQty" -> "BegBalance" -> "Int" -> "No_Entity" -> "No_Factory" / "HBtlpCs" -> "BegBalance" -> "Int" -> "No_Entity" -> "No_Factory" * 900 * "HV9L" * -1;
+"4010.ST_CAL" = #Missing;
+"4010.STR_CAL" = "HTPR" * "HV9L" -> "Other_Factory" * -1;
+/* If Brand is ST Brand */
+ELSEIF("HST" -> "BegBalance" -> "No_Factory" -> "No_Entity" -> "Int" == 0)
+"4010.NST_CAL" = "HCOGSNONST" -> "No_Entity" / "HQty" -> "BegBalance" -> "Int" -> "No_Entity" -> "No_Factory" / "HBtlpCs" -> "BegBalance" -> "Int" -> "No_Entity" -> "No_Factory" * 900 * "HV9L" * -1;
+/* "4010.ST_CAL" = "HTPFOBPI" * "HV9L" -> "Other_Factory" * -1;*/
+"4010.STR_CAL" = "HTPR" * "HV9L" -> "Other_Factory" * -1;
+ENDIF
+/* Calculate Total Handling Costs - T&D */
+"4011.DUT_CAB_CAL" = "HHCTDCAB" -> "No_Factory" -> "No_Entity" * "HV9L"  * -1;
+/* Calculate Total Handling Costs - Others */
+"4011.HAN_IF_CAL" = "HHCOIF" -> "No_Entity" * "HV9L"  * -1;
+"4011.HAN_II_CAL" = "HHCOII" -> "No_Entity" * "HV9L"  * -1;
+)
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Calculate Distribution Costs TP - Region */
+FIX(&CurMonth:"Jun")
+FIX("Int")
+FIX("No_Factory")
+FIX(@RELATIVE("RateArea_Group_Reporting_BII",0))
+FIX(@RELATIVE("BrandPack_Group_BII",0))
+FIX(&CurScenario,"No_Department", "Local")
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+"5301.TP_CAL"
+(
+"5301.TP_CAL" = "HDCTP" * "HV9L" -> "Other_Factory" * -1;
+)
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Updated on 2014-06-19 by Connie Liang */
+FIX(&CurMonth:"Jun")
+FIX("Int")
+FIX(@RELATIVE("Other_Factory",0))
+FIX(@RELATIVE("RateArea_Group_Reporting_BII",0))
+FIX(@RELATIVE("BrandPack_Group_BII",0))
+FIX(&CurScenario,"No_Department", "Local")
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+"3010.K9L_CAL"
+(
+IF("HST" -> "BegBalance" -> "No_Factory" -> "No_Entity" -> "Int" == 0)
+  "4010.ST_CAL" = "HTPFOBPI" -> "No_Factory" -> "Int" * "HV9L" * -1;
+ENDIF
+)
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Calculate P&L account lines for Volume and Production(Brand-Pack Level) - BIO */
+FIX(&CurMonth:"Jun")
+FIX("Int")
+FIX("No_Factory")
+FIX(@RELATIVE("RateArea_Group_Reporting_BIO",0))
+FIX(@RELATIVE("BrandPack_Group_BIO",0))
+FIX(&CurScenario,"No_Department", "Local")
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+"3010.K9L_CAL" (
+/* Calculate Volume (K9L) */
+"3010.K9L_CAL" = "HV9L" / 1000;
+/* Calculate Volume (KL) */
+"3010.KL_CAL" = "3010.K9L_CAL" * 9;
+/* Calculate Gross Sales Incl. T&D */
+"3010.GS_CAL" = "HNS" * "HV9L";
+/* HPCurr = 1 (INR), HPCurr = 2 (USD), HPCurr = 3 (GBP)*/
+/* INR */
+IF("HPCurr"->"BegBalance" == 1)
+"3010.GS_CAL_INR" = "HP" * "HV9L";
+/* USD */
+ELSEIF("HPCurr"->"BegBalance" == 2)
+"3010.GS_CAL_USD" = "HP" * "HV9L";
+/* GBP */
+ELSEIF("HPCurr"->"BegBalance" == 3)
+"3010.GS_CAL_GBP" = "HP" * "HV9L";
+ENDIF
+)
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Aggregate Factory for further calculation */
+FIX("3010.KL_CAL","HV9L")
+FIX("Int")
+FIX(&CurMonth:"Jun")
+FIX("HSP_InputValue")
+FIX("Local")
+FIX({INHSP_Version})
+FIX(&CurYear)
+FIX("No_Department")
+FIX(&CurScenario)
+FIX(@RELATIVE("RateArea_Group",0))
+FIX(@RELATIVE("BrandPack_Group",0))
+"Other_Factory";
+"Total_Factory";
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/******* Calculate Internal Budgeting BII ***********/
+/* Calculate P&L account lines (Brand-Pack Level) */
+FIX("Int")
+FIX(&CurMonth:"Jun")
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+FIX("No_Factory")
+FIX(&CurScenario,"No_Department", "Local")
+FIX(@RELATIVE("RateArea_Group_Reporting_BII",0))
+FIX(@RELATIVE("BrandPack_Group_BII",0))
+"3010.K9L_CAL" (
+/* Calculate Allowance and Discount */
+"5203.KIND_CAL" = "HADPSK." * "HV9L" -> "Other_Factory" * -1;
+"5203.PRIMARY_CAL" = "HADPSC." * "HV9L" -> "Other_Factory" * -1;
+"5203.SECOND_CAL" = "HADSSC." * "HV9L" -> "Other_Factory" * -1;
+"5204.ATB_CAL" = "HADTBATB." * "HV9L" -> "Other_Factory" * -1;
+"5204.OCTROI_CAL" = "HADSSO." * "HV9L" -> "Other_Factory" * -1;
+"5204.QTB_CAL" = "HADTBQTB." * "HV9L" -> "Other_Factory" * -1;
+"5204.SONARY_CAL" = "HADS." * "HV9L" -> "Other_Factory" * -1;
+/* Calculate Standard Costs */
+/* If Current Scenario is get, Foreign Exchange on Standard Costs equal to 0 */
+/* IF(@ISMBR("B"))
+IF(@ISUDA(Entity,"INR"))
+"HFXSTDC_CAL" = #Missing;
+"HSTDC_CAL" = "HSC_B" -> "No_Factory" -> "PR_India_Input" * "3010.KL_CAL" -> "Total_Factory" -> "Int" * -1 * 1000;
+ELSEIF(@ISUDA(Entity,"USD"))
+"HFXSTDC_CAL" = #Missing;
+"HSTDC_CAL" = "HSC_B" -> "No_Factory" -> "PR_Gulf_Input" * "3010.KL_CAL" -> "Total_Factory" -> "Int" * -1 * 1000;
+ENDIF */
+/* If Current Scenario is not equal to get, calculate Foreign Exchange on Standard Costs based on Current Year get */
+/* ELSE
+IF(@ISUDA(Entity,"INR"))
+"HFXSTDC_CAL" = "HSC" -> "No_Factory" -> "PR_India_Input" * "3010.KL_CAL" -> "Total_Factory" -> "Int" * -1 - "HSC_B" -> "No_Factory" -> "PR_India_Input" * "3010.KL_CAL" -> "Total_Factory" -> "Int" * -1;
+"HSTDC_CAL" = "HSC_B" -> "No_Factory" -> "PR_India_Input" * "3010.KL_CAL" -> "Total_Factory" -> "Int" * -1 * 1000;
+ELSEIF(@ISUDA(Entity,"USD"))
+"HFXSTDC_CAL" = "HSC" -> "No_Factory" -> "PR_Gulf_Input" * "3010.KL_CAL" -> "Total_Factory" -> "Int" * -1 - "HSC_B" -> "No_Factory" -> "PR_Gulf_Input" * "3010.KL_CAL" -> "Total_Factory" -> "Int" * -1;
+"HSTDC_CAL" = "HSC_B" -> "No_Factory" -> "PR_Gulf_Input" * "3010.KL_CAL" -> "Total_Factory" -> "Int" * -1 * 1000;
+ENDIF
+ENDIF */
+/* Calculate Distribution Costs */
+"5301.BE_CAL" = "HDCBE" * "HV9L" -> "Other_Factory" * -1;
+"5353_CAL" = "HDCBEV" * "HV9L" -> "Other_Factory" * -1;
+"5301.BR_CAL" = "HDCBR" * "HV9L" -> "Other_Factory" * -1;
+"5301.DT_CAL" = "HDCTD" * "HV9L" -> "Other_Factory" * -1;
+"5301.F_CAL" = "HDCF" * "HV9L" -> "Other_Factory" * -1;
+"5301.TSB_CAL" = "HDCTS" * "HV9L" -> "Other_Factory" * -1;
+"5301.OTH_CAL" = "HDCV" * "HV9L" -> "Other_Factory" * -1;
+"5301.O_CAL" = "HDCO" * "HV9L" -> "Other_Factory" * -1;
+"5301.PC_CAL" = "HDCPC" * "HV9L" -> "Other_Factory" * -1;
+"6381.M_CAL" = "HDCIPM" * "HV9L" -> "Other_Factory" * -1;
+"5301.S_CAL" = "HDCS" * "HV9L" -> "Other_Factory" * -1;
+"5301.TSP_CAL" = "HDCTSP" * "HV9L" -> "Other_Factory" * -1;
+"5301.TSS_CAL" = "HDCTSS" * "HV9L" -> "Other_Factory" * -1;
+"5301.DM_CAL" = "HDCDM" * "HV9L" -> "Other_Factory" * -1;
+"5301.DTN_CAL" = "HDCDTN" * "HV9L" -> "Other_Factory" * -1;
+
+"5342R.TS_CAL" = "HDCRTS" * "HV9L" -> "Other_Factory" * -1;
+"5380.TD_CAL" = "HDCTDC" * "HV9L" -> "Other_Factory" * -1;
+"5370.PF_CAL" = "HDCPF" * "HV9L" -> "Other_Factory" * -1;
+"5378_CAL" = "HDCODC" * "HV9L" -> "Other_Factory" * -1;
+"5377_CAL" = "HDCODB" * "HV9L" -> "Other_Factory" * -1;
+"5399_CAL" = "HDCBS" * "HV9L" -> "Other_Factory" * -1;
+"5365_CAL" = "HDCVBE" * "HV9L" -> "Other_Factory" * -1;
+)
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/* Updated on 2014-06-19 by Connie Liang */
+FIX("Int")
+FIX(&CurMonth:"Jun")
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+FIX(@RELATIVE("Other_Factory",0))
+FIX(&CurScenario,"No_Department", "Local")
+FIX(@RELATIVE("RateArea_Group_Reporting_BII",0))
+FIX(@RELATIVE("BrandPack_Group_BII",0))
+"3010.K9L_CAL" (
+/* Calculate Standard Costs */
+/* If Current Scenario is get, Foreign Exchange on Standard Costs equal to 0 */
+IF(@ISMBR("B"))
+IF(@ISUDA(Entity,"INR"))
+"HFXSTDC_CAL" = #Missing;
+"HSTDC_CAL" = "HSC_B" -> "No_Factory" -> "PR_India_Input" -> "Int" * "3010.KL_CAL" * -1 * 1000;
+ELSEIF(@ISUDA(Entity,"USD"))
+"HFXSTDC_CAL" = #Missing;
+"HSTDC_CAL" = "HSC_B" -> "No_Factory" -> "PR_Gulf_Input" -> "Int" * "3010.KL_CAL" * -1 * 1000;
+ENDIF
+/* If Current Scenario is not equal to get, calculate Foreign Exchange on Standard Costs based on Current Year get */
+ELSE
+IF(@ISUDA(Entity,"INR"))
+"HFXSTDC_CAL" = "HSC" -> "No_Factory" -> "PR_India_Input" -> "Int" * "3010.KL_CAL" * -1 - "HSC_B" -> "No_Factory" -> "PR_India_Input" -> "Int" * "3010.KL_CAL" * -1;
+"HSTDC_CAL" = "HSC_B" -> "No_Factory" -> "PR_India_Input" -> "Int" * "3010.KL_CAL" * -1 * 1000;
+ELSEIF(@ISUDA(Entity,"USD"))
+"HFXSTDC_CAL" = "HSC" -> "No_Factory" -> "PR_Gulf_Input" -> "Int" * "3010.KL_CAL" * -1 - "HSC_B" -> "No_Factory" -> "PR_Gulf_Input" -> "Int" * "3010.KL_CAL" * -1;
+"HSTDC_CAL" = "HSC_B" -> "No_Factory" -> "PR_Gulf_Input" -> "Int" * "3010.KL_CAL" * -1 * 1000;
+ENDIF
+ENDIF
+)
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/******* Calculate Internal Budgeting BIO***********/
+/* Calculate P&L account lines (Brand-Pack Level) */
+FIX("Int")
+FIX(&CurMonth:"Jun")
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+FIX("No_Factory")
+FIX(&CurScenario,"No_Department", "Local")
+FIX(@RELATIVE("RateArea_Group_Reporting_BIO",0))
+FIX(@RELATIVE("BrandPack_Group_BIO",0))
+"3010.K9L_CAL" (
+/* Calculate Allowance and Discount */
+"5203.KIND_CAL" = "HADPSK." * "HV9L" * -1;
+"5203.PRIMARY_CAL" = "HADPSC." * "HV9L" * -1;
+"5203.SECOND_CAL" = "HADSSC." * "HV9L" * -1;
+"5204.ATB_CAL" = "HADTBATB." * "HV9L" * -1;
+"5204.OCTROI_CAL" = "HADSSO." * "HV9L" * -1;
+"5204.QTB_CAL" = "HADTBQTB." * "HV9L" * -1;
+"5204.SONARY_CAL" = "HADS." * "HV9L" * -1;
+/* Calculate Standard Costs */
+/* If Current Scenario is get, Foreign Exchange on Standard Costs equal to 0 */
+IF(@ISMBR("B"))
+IF(@ISUDA(Entity,"INR"))
+"HFXSTDC_CAL" = 0;
+"HSTDC_CAL" = "HSC_B" -> "No_Factory" -> "PR_India_Input" * "3010.KL_CAL" -> "Total_Factory" -> "Int" * -1 * 1000;
+ELSEIF(@ISUDA(Entity,"USD"))
+"HFXSTDC_CAL" = 0;
+"HSTDC_CAL" = "HSC_B" -> "No_Factory" -> "PR_Gulf_Input" * "3010.KL_CAL" -> "Total_Factory" -> "Int" * -1 * 1000;
+ENDIF
+/* If Current Scenario is not equal to get, calculate Foreign Exchange on Standard Costs based on Current Year get */
+ELSE
+IF(@ISUDA(Entity,"INR"))
+"HFXSTDC_CAL" = "HSC" -> "No_Factory" -> "PR_India_Input" * "3010.KL_CAL" -> "Total_Factory" -> "Int" * -1 * 1000 - "HSC_B" -> "No_Factory" -> "PR_India_Input" * "3010.KL_CAL" -> "Total_Factory" -> "Int" * -1 * 1000;
+"HSTDC_CAL" = "HSC_B" -> "No_Factory" -> "PR_India_Input" * "3010.KL_CAL" -> "Total_Factory" -> "Int" * -1 * 1000;
+ELSEIF(@ISUDA(Entity,"USD"))
+"HFXSTDC_CAL" = "HSC" -> "No_Factory" -> "PR_Gulf_Input" * "3010.KL_CAL" -> "Total_Factory" -> "Int" * -1 * 1000 - "HSC_B" -> "No_Factory" -> "PR_Gulf_Input" * "3010.KL_CAL" -> "Total_Factory" -> "Int" * -1 * 1000;
+"HSTDC_CAL" = "HSC_B" -> "No_Factory" -> "PR_Gulf_Input" * "3010.KL_CAL" -> "Total_Factory" -> "Int" * -1 * 1000;
+ENDIF
+ENDIF
+/* Calculate Cost of Goods Sold ST/Non-ST */
+/* If Brand is Non-ST Brand */
+IF("HST"->"BegBalance"->"No_Factory"->"No_Entity"->"Int" > 0)
+IF(@ISUDA(Entity,"INR"))
+"4010.NST_CAL" = "HCOGSNONST" -> "PR_India_Input" -> "B" / "HQty" -> "BegBalance" -> "Int" -> "No_Entity" -> "No_Factory" / "HBtlpCs" -> "BegBalance" -> "Int" -> "No_Entity" -> "No_Factory" * 900 * "HV9L" * -1;
+ELSEIF(@ISUDA(Entity,"USD"))
+"4010.NST_CAL" = "HCOGSNONST" -> "PR_Gulf_Input" -> "B" / "HQty" -> "BegBalance" -> "Int" -> "No_Entity" -> "No_Factory" / "HBtlpCs" -> "BegBalance" -> "Int" -> "No_Entity" -> "No_Factory" * 900 * "HV9L" * -1;
+ENDIF
+"4010.ST_CAL" = #Missing;
+/* If Brand is ST Brand */
+ELSEIF("HST"->"BegBalance"->"No_Factory"->"No_Entity"->"Int" == 0)
+IF(@ISUDA(Entity,"INR"))
+"4010.NST_CAL" = "HCOGSNONST" -> "PR_India_Input" -> "B" / "HQty" -> "BegBalance" -> "Int" -> "No_Entity" -> "No_Factory" / "HBtlpCs" -> "BegBalance" -> "Int" -> "No_Entity" -> "No_Factory" * 900 * "HV9L" * -1;
+ELSEIF(@ISUDA(Entity,"USD"))
+"4010.NST_CAL" = "HCOGSNONST" -> "PR_Gulf_Input" -> "B" / "HQty" -> "BegBalance" -> "Int" -> "No_Entity" -> "No_Factory" / "HBtlpCs" -> "BegBalance" -> "Int" -> "No_Entity" -> "No_Factory" * 900 * "HV9L" * -1;
+ENDIF
+"4010.ST_CAL" = "HTPFOBPI" * "HV9L" * -1;
+ENDIF
+/* Calculate Distribution Costs */
+"5301.BE_CAL" = "HDCBE" * "HV9L" * -1;
+"5353_CAL" = "HDCBEV" * "HV9L" * -1;
+"5301.BR_CAL" = "HDCBR" * "HV9L" * -1;
+"5301.DT_CAL" = "HDCTD" * "HV9L" * -1;
+"5301.F_CAL" = "HDCF" * "HV9L" * -1;
+"5301.TSB_CAL" = "HDCTS" * "HV9L" * -1;
+"5301.OTH_CAL" = "HDCV" * "HV9L" * -1;
+"5301.O_CAL" = "HDCO" * "HV9L" * -1;
+"5301.PC_CAL" = "HDCPC" * "HV9L" * -1;
+"6381.M_CAL" = "HDCIPM" * "HV9L" * -1;
+"5301.S_CAL" = "HDCS" * "HV9L" * -1;
+"5301.TSP_CAL" = "HDCTSP" * "HV9L" * -1;
+"5301.TSS_CAL" = "HDCTSS" * "HV9L" * -1;
+"5301.DM_CAL" = "HDCDM" * "HV9L" * -1;
+"5301.DTN_CAL" = "HDCDTN" * "HV9L" * -1;
+
+"5342R.TS_CAL" = "HDCRTS" * "HV9L" * -1;
+"5380.TD_CAL" = "HDCTDC" * "HV9L" * -1;
+"5370.PF_CAL" = "HDCPF" * "HV9L" * -1;
+"5378_CAL" = "HDCODC" * "HV9L" * -1;
+"5377_CAL" = "HDCODB" * "HV9L" * -1;
+"5399_CAL" = "HDCBS" * "HV9L" * -1;
+"5365_CAL" = "HDCVBE" * "HV9L" * -1;
+)
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/* Update on 14-Feb-2012 for calculation of Handling Costs T&D and Handling Costs Others */
+/******* Calculate Internal Budgeting BIO only for PR-Gulf ***********/
+/* Calculate P&L account lines (Brand-Pack Level) */
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+FIX("No_Factory")
+FIX(&CurScenario,"No_Department", "Local")
+FIX(@RELATIVE("RateArea_Group_Input_Form_BIO_Gulf",0))
+FIX(@RELATIVE("BrandPack_Group_BIO",0))
+FIX("Int")
+FIX(&CurMonth:"Jun")
+"3010.K9L_CAL" (
+/* Calculate Total Handling Costs - Others */
+"4011.HAN_IF_CAL" = "HHCOIF" * "HV9L" * -1;
+"4011.HAN_II_CAL" = "HHCOII" * "HV9L" * -1;
+)
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/******* Calculate Handling Costs Others only for BIO Rate Area under PR-India ***********/
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+FIX("No_Factory")
+FIX(&CurScenario,"No_Department", "Local")
+FIX(@RELATIVE("RateArea_Group_Input_Form_BIO_India",0))
+FIX(@RELATIVE("BrandPack_Group_BIO",0))
+FIX("Int")
+FIX(&CurMonth:"Jun")
+"3010.K9L_CAL" (
+/* Calculate Total Handling Costs - Others */
+"4011.HAN_IF_CAL" = "HHCOIF" -> "No_Entity" * "HV9L" * -1;
+"4011.HAN_II_CAL" = "HHCOII" -> "No_Entity" * "HV9L" * -1;
+)
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/******* Calculate Handling Costs T&D only for BIO Rate Area Duty Paid under PR-India ***********/
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+FIX("No_Factory")
+FIX(&CurScenario,"No_Department", "Local")
+FIX(@UDA(Entity,"Duty Paid"))
+FIX(@RELATIVE("BrandPack_Group_BIO",0))
+FIX("Int")
+FIX(&CurMonth:"Jun")
+"3010.K9L_CAL" (
+/* Calculate Total Handling Costs - T&D */
+"4011.DUT_IFG_CAL" = "HHCTDF." -> "No_Entity" * "HV9L"  * -1;
+)
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/* Update on 30-Sep-2011 for calculation of Transfer Price Region BIO */
+/* Copy Transfer Price Region (BIO) from Budget to Current Scenario. */
+/* Update on 16-Apr-2011 for calculation of Distribution Costs TP Region BIO */
+/* Copy DCTP Region (BIO) from Budget to Current Scenario. */
+FIX("HTPRAC","HTPR9L","HDCTPAC","HDCTP9L")
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+FIX("No_Factory")
+FIX("No_Department", "Local")
+FIX("IBI_7_Total","IBI_8_Total")
+FIX(@RELATIVE("BrandPack_Group_BIO",0))
+FIX("Int")
+FIX(&CurMonth:"Jun")
+&CurScenario = "B";
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/*Allocates Actual Cases and 9L Cases to Rate Areas under DFEC*/
+FIX("Int")
+FIX(&CurMonth:"Jun")
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+FIX("No_Factory")
+FIX("Local", &CurScenario, "No_Department")
+FIX(@UDA(Entity,"DFEC"))
+FIX(@RELATIVE("BrandPack_Group_BIO",0))
+"HTPRAC" = "HTPRAC" -> "IBI_7_Total" -> "No_Factory";
+"HTPR" = "HTPR9L" -> "IBI_7_Total" -> "No_Factory";
+"HDCTPAC" = "HDCTPAC" -> "IBI_7_Total" -> "No_Factory";
+"HDCTP" = "HDCTP9L" -> "IBI_7_Total" -> "No_Factory";
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/*Allocates Actual Cases and 9L Cases to Rate Areas under Duty Paid*/
+FIX("Int")
+FIX(&CurMonth:"Jun")
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+FIX("No_Factory")
+FIX("Local", &CurScenario, "No_Department")
+FIX(@UDA(Entity,"Duty Paid"))
+FIX(@RELATIVE("BrandPack_Group_BIO",0))
+"HTPRAC" = "HTPRAC" -> "IBI_8_Total" -> "No_Factory";
+"HTPR" = "HTPR9L" -> "IBI_8_Total" -> "No_Factory";
+"HDCTPAC" = "HDCTPAC" -> "IBI_8_Total" -> "No_Factory";
+"HDCTP" = "HDCTP9L" -> "IBI_8_Total" -> "No_Factory";
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/* Calculate P&L account lines (Brand-Pack Level) - For DFEC & Duty Paid */
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+FIX("No_Factory")
+FIX(&CurScenario,"No_Department", "Local")
+FIX(@UDA(Entity,"Duty Paid"),@UDA(Entity,"DFEC"))
+FIX(@RELATIVE("BrandPack_Group_BIO",0))
+FIX("Int")
+FIX(&CurMonth:"Jun")
+"4010.STR_CAL" = "HTPR" * "HV9L" * -1;
+"5301.TP_CAL" = "HDCTP" * "HV9L" * -1;
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/* Update on 09-Jan-2012 for calculation logic of A&P (Changed from Region level to Rate Area level) */
+/* Calculate P&L account lines (Brand Level)*/
+FIX("Int")
+FIX(&CurMonth:"Jun")
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+FIX("No_Factory")
+FIX(&CurScenario,"No_Department", "Local")
+FIX(@RELATIVE("RateArea_Group",0))
+FIX(@RELATIVE("Brand_Group",0))
+/* Calculate Trade A&P */
+"5005_CAL" = "HTAP_TE" * -1;
+"5006_CAL" = "HTAP_TP" * -1;
+"5007_CAL" = "HTAP_DCPP" * -1;
+"5008_CAL" = "HTAP_DCSOP" * -1;
+"5009_CAL" = "HTAP_DCSS" * -1;
+"5010_CAL" = "HTAP_CTSE" * -1;
+/* Calculate Consumer A&P */
+/* Calculate Media */
+"5023_CAL" = "HCAPM_C" * -1;
+"5024_CAL" = "HCAPM_O" * -1;
+"5025_CAL" = "HCAPM_I" * -1;
+"5026_CAL" = "HCAPM_P" * -1;
+"5027_CAL" = "HCAPM_R" * -1;
+"5028_CAL" = "HCAPM_TV" * -1;
+"5029_CAL" = "HCAPM_OC" * -1;
+"5030_CAL" = "HCAPM_MATU" * -1;
+"5031_CAL" = "HCAPM_DCO" * -1;
+"5032_CAL" = "HCAPM_AC" * -1;
+/* Calculate Other A&P */
+"5053_CAL" = "HCAPOAP_DME" * -1;
+"5054_CAL" = "HCAPOAP_PARF" * -1;
+"5055_CAL" = "HCAPOAP_OPE" * -1;
+"5056_CAL" = "HCAPOAP_CE" * -1;
+"5057_CAL" = "HCAPOAP_CPE" * -1;
+"5058_CAL" = "HCAPOAP_DB" * -1;
+"5059_CAL" = "HCAPOAP_ODM" * -1;
+"5060_CAL" = "HCAPOAP_PPM" * -1;
+"5061_CAL" = "HCAPOAP_MI" * -1;
+"5062_CAL" = "HCAPOAP_TS" * -1;
+"5063_CAL" = "HCAPOAP_MR" * -1;
+"5064_CAL" = "HCAPOAP_PD" * -1;
+"5065_CAL" = "HCAPOAP_ADPTV" * -1;
+"5066_CAL" = "HCAPOAP_ADPO" * -1;
+"5067_CAL" = "HCAPOAP_BC" * -1;
+"5068_CAL" = "HCAPOAP_CET" * -1;
+"5069_CAL" = "HCAPOAP_EP" * -1;
+"5070_CAL" = "HCAPOAP_EC" * -1;
+"5071_CAL" = "HCAPOAP_GR" * -1;
+"5073_CAL" = "HCAPOAP_PVGE" * -1;
+"5074_CAL" = "HCAPOAP_OSF" * -1;
+"5075_CAL" = "HCAPOAP_OODE" * -1;
+"5076_CAL" = "HCAPOAP_OPPM" * -1;
+"5077_CAL" = "HCAPOAP_ECRM" * -1;
+"5078_CAL" = "HCAPOAP_OCP" * -1;
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/* ***************************************************************************************** */
+/* **********************************For Aggregation****************************************** */
+/* ***************************************************************************************** */
+SET FRMLBOTTOMUP ON;
+/* Aggregate Brand for display */
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX("Local")
+FIX(&CurYear)
+FIX(@RELATIVE("Other_Factory",0), "No_Factory",@RELATIVE("HOF_PRD_OVH",0))
+FIX("No_Department")
+FIX(&CurScenario)
+FIX(@RELATIVE("Total_Entity",0))
+FIX("HVAC",@RELATIVE("P&L",0),"HV9L")
+FIX("Int")
+FIX(&CurMonth:"Jun")
+"BrandPack_Group_BII";
+"BrandPack_Group_BIO";
+"BrandPack_Group";
+"Brand_Group_BII";
+"Brand_Group_BIO";
+"Brand_Group";
+"15_Key_Brands";
+"30_Key_Brands";
+@IDESCENDANTS("RP6_Total");
+@IDESCENDANTS("Product_Segment_Total");
+@IDESCENDANTS("Mgm_Reporting_Total");
+@CHILDREN("RP6_Reporting");
+@CHILDREN("Top 14");
+@ICHILDREN("Total Strategic Brands");
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/* Aggregate Entity for display */
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX("Local")
+FIX(&CurYear)
+FIX(@RELATIVE("Other_Factory",0), "No_Factory",@RELATIVE("HOF_PRD_OVH",0))
+FIX("No_Department")
+FIX(&CurScenario)
+FIX("BrandPack_Group_BII","BrandPack_Group_BIO","BrandPack_Group","Brand_Group_BII","Brand_Group_BIO","Brand_Group",@IDESCENDANTS("RP6_Total"),@IDESCENDANTS("Product_Segment_Total"),@IDESCENDANTS("Mgm_Reporting_Total"),@RELATIVE("BrandPack_Group",0), "15_Key_Brands", "30_Key_Brands", @CHILDREN("RP6_Reporting"), @CHILDREN("Top 14"), @ICHILDREN("Total Strategic Brands"))
+FIX("HVAC",@RELATIVE("P&L",0),"HV9L")
+FIX("Int")
+FIX(&CurMonth:"Jun")
+"RateArea_Group_Gulf";
+"RateArea_Group_India";
+"RateArea_Group";
+"Region_Group";
+@IDESCENDANTS("Total_Entity");
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/* Aggregate Factory for display */
+FIX("HVAC",@RELATIVE("P&L",0),"HVAC","HV9L")
+FIX("Int")
+FIX(&CurMonth:"Jun")
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX("Local")
+FIX(&CurYear)
+FIX("No_Department")
+FIX(&CurScenario)
+FIX("RateArea_Group_Gulf","RateArea_Group_India","RateArea_Group","Region_Group",@IDESCENDANTS("Total_Entity"))
+FIX("BrandPack_Group_BII","BrandPack_Group_BIO","BrandPack_Group","Brand_Group_BII","Brand_Group_BIO","Brand_Group",@IDESCENDANTS("RP6_Total"),@IDESCENDANTS("Product_Segment_Total"),@IDESCENDANTS("Mgm_Reporting_Total"),@RELATIVE("BrandPack_Group",0), "15_Key_Brands", "30_Key_Brands", @CHILDREN("RP6_Reporting"), @CHILDREN("Top 14"), @ICHILDREN("Total Strategic Brands"))
+"HOF_PRD_OVH";
+"Other_Factory";
+"Total_Factory";
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+SET CACHE HIGH;
+SET UPDATECALC OFF;
+SET CLEARUPDATESTATUS OFF;
+SET LOCKBLOCK HIGH;
+/* ***************************************************************************************** */
+/* Copy data for calculations */
+FIX("HSP_InputValue")
+FIX(&CurYear)
+FIX({INHSP_Version})
+FIX(&CurScenario)
+FIX("No_Department")
+FIX(@RELATIVE("Other_Factory",0),"No_Factory",@RELATIVE("HOF_PRD_OVH",0))
+FIX(@RELATIVE("Total_Entity",0))
+FIX(@RELATIVE("Calculation_Group",0),"RP6_BII_Dummy")
+FIX(@RELATIVE("YearTotal",0))
+FIX(@RELATIVE("P&L",0),"HVAC","HV9L")
+FIX("Int")
+DATACOPY "Local" TO "INR";
+DATACOPY "Local" TO "USD";
+DATACOPY "Local" TO "EUR";
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/* ***************************************************************************************** */
+/* Convert from Local currency to Euro */
+FIX("HSP_InputValue")
+FIX("EUR","INR","USD")
+FIX(&CurYear)
+FIX({INHSP_Version})
+FIX("No_Department")
+FIX(&CurScenario)
+FIX(@RELATIVE("Total_Entity",0))
+FIX(@RELATIVE("Other_Factory",0),"No_Factory",@RELATIVE("HOF_PRD_OVH",0))
+FIX(@RELATIVE("Calculation_Group",0),"RP6_BII_Dummy")
+FIX(@RELATIVE("YearTotal",0))
+FIX(@RELATIVE("P&L",0))
+"Int" (
+@CALCMODE(BOTTOMUP);
+@CALCMODE(BLOCK);
+/* Convert P&L Items from INR to EUR */
+IF(@ISUDA(Entity,"INR") AND @ISMBR("EUR"))
+"Local" * "Version" -> "Currency" -> "Entity" -> "Brand" -> "Data" -> "Department" -> "Factory" -> "HSP_Rate_EUR" / "Version" -> "Currency" -> "Entity" -> "Brand" -> "Data" -> "Department" -> "Factory" -> "HSP_Rate_INR";
+/* Convert P&L Items from USD to EUR */
+ELSEIF(@ISUDA(Entity,"USD") AND @ISMBR("EUR"))
+"Local" * "Version" -> "Currency" -> "Entity" -> "Brand" -> "Data" -> "Department" -> "Factory" -> "HSP_Rate_EUR" / "Version" -> "Currency" -> "Entity" -> "Brand" -> "Data" -> "Department" -> "Factory" -> "HSP_Rate_USD";
+ENDIF
+)
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/* ***************************************************************************************** */
+/* Convert from Local currency to USD */
+FIX("HSP_InputValue")
+FIX(&CurYear)
+FIX({INHSP_Version})
+FIX(&CurScenario)
+FIX("No_Department")
+FIX("EUR","INR","USD")
+FIX(@RELATIVE("Other_Factory",0),"No_Factory",@RELATIVE("HOF_PRD_OVH",0))
+FIX(@RELATIVE("Total_Entity",0))
+FIX(@RELATIVE("Calculation_Group",0),"RP6_BII_Dummy")
+FIX(@RELATIVE("YearTotal",0))
+FIX(@RELATIVE("P&L",0))
+"Int" (
+@CALCMODE(BOTTOMUP);
+@CALCMODE(BLOCK);
+/* Convert P&L Items from INR to USD */
+IF(@ISUDA(Entity,"INR") AND @ISMBR("USD"))
+"Local" * "Version" -> "Currency" -> "Entity" -> "Brand" -> "Data" -> "Department" -> "Factory" -> "HSP_Rate_USD" / "Version" -> "Currency" -> "Entity" -> "Brand" -> "Data" -> "Department" -> "Factory" -> "HSP_Rate_INR";
+/* Convert P&L Items from USD to USD */
+ELSEIF(@ISUDA(Entity,"USD") AND @ISMBR("USD"))
+"Local";
+ENDIF
+)
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/* ***************************************************************************************** */
+/* Convert from Local currency to INR */
+FIX("HSP_InputValue")
+FIX("EUR","INR","USD")
+FIX(&CurYear)
+FIX({INHSP_Version})
+FIX(&CurScenario)
+FIX("No_Department")
+FIX(@RELATIVE("Other_Factory",0),"No_Factory",@RELATIVE("HOF_PRD_OVH",0))
+FIX(@RELATIVE("Total_Entity",0))
+FIX(@RELATIVE("Calculation_Group",0),"RP6_BII_Dummy")
+FIX(@RELATIVE("YearTotal",0))
+FIX(@RELATIVE("P&L",0))
+"Int" (
+@CALCMODE(BOTTOMUP);
+@CALCMODE(BLOCK);
+/* Convert P&L Items from USD to INR */
+IF(@ISUDA(Entity,"USD") AND @ISMBR("INR"))
+"Local" * "Version" -> "Currency" -> "Entity" -> "Brand" -> "Data" -> "Department" -> "Factory" -> "HSP_Rate_INR" / "Version" -> "Currency" -> "Entity" -> "Brand" -> "Data" -> "Department" -> "Factory" -> "HSP_Rate_USD";
+ELSEIF(@ISUDA(Entity,"INR") AND @ISMBR("INR"))
+"Local";
+ENDIF
+)
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/* ***************************************************************************************** */
+/* **********************************For Aggregation**************************************** */
+/* ***************************************************************************************** */
+SET FRMLBOTTOMUP ON;
+/* Aggregate Brand for display */
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX("EUR","INR","USD")
+FIX(&CurYear)
+FIX(@RELATIVE("Other_Factory",0), "No_Factory",@RELATIVE("HOF_PRD_OVH",0))
+FIX("No_Department")
+FIX(&CurScenario)
+FIX(@RELATIVE("Total_Entity",0))
+FIX(@RELATIVE("YearTotal",0))
+FIX(@RELATIVE("P&L",0),"HVAC","HV9L")
+FIX("Int")
+"BrandPack_Group_BII";
+"BrandPack_Group_BIO";
+"BrandPack_Group";
+"Brand_Group_BII";
+"Brand_Group_BIO";
+"Brand_Group";
+"15_Key_Brands";
+"30_Key_Brands";
+@IDESCENDANTS("RP6_Total");
+@IDESCENDANTS("Product_Segment_Total");
+@IDESCENDANTS("Mgm_Reporting_Total");
+@CHILDREN("RP6_Reporting");
+@CHILDREN("Top 14");
+@ICHILDREN("Total Strategic Brands");
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/* Aggregate Entity for display */
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX("EUR","INR","USD")
+FIX(&CurYear)
+FIX("No_Department")
+FIX(&CurScenario)
+FIX(@RELATIVE("Other_Factory",0), "No_Factory",@RELATIVE("HOF_PRD_OVH",0))
+FIX("BrandPack_Group_BII","BrandPack_Group_BIO","BrandPack_Group","Brand_Group_BII","Brand_Group_BIO","Brand_Group",@IDESCENDANTS("RP6_Total"),@IDESCENDANTS("Product_Segment_Total"),@IDESCENDANTS("Mgm_Reporting_Total"),@RELATIVE("BrandPack_Group",0), "15_Key_Brands", "30_Key_Brands", @CHILDREN("RP6_Reporting"), @CHILDREN("Top 14"), @ICHILDREN("Total Strategic Brands"))
+FIX(@RELATIVE("YearTotal",0))
+FIX(@RELATIVE("P&L",0),"HVAC","HV9L")
+FIX("Int")
+"RateArea_Group_Gulf";
+"RateArea_Group_India";
+"RateArea_Group";
+"Region_Group";
+@IDESCENDANTS("Total_Entity");
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/* Aggregate Factory for display */
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX("EUR","INR","USD")
+FIX(&CurYear)
+FIX("No_Department")
+FIX(&CurScenario)
+FIX("RateArea_Group_Gulf", "RateArea_Group_India", "RateArea_Group", "Region_Group",@IDESCENDANTS("Total_Entity"))
+FIX("BrandPack_Group_BII","BrandPack_Group_BIO","BrandPack_Group","Brand_Group_BII","Brand_Group_BIO","Brand_Group",@IDESCENDANTS("RP6_Total"),@IDESCENDANTS("Product_Segment_Total"),@IDESCENDANTS("Mgm_Reporting_Total"),@RELATIVE("BrandPack_Group",0), "15_Key_Brands", "30_Key_Brands", @CHILDREN("RP6_Reporting"), @CHILDREN("Top 14"), @ICHILDREN("Total Strategic Brands"))
+FIX(@RELATIVE("YearTotal",0))
+FIX(@RELATIVE("P&L",0),"HVAC","HV9L")
+FIX("Int")
+"HOF_PRD_OVH";
+"Other_Factory";
+"Total_Factory";
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+
+FIX("Int" ,"BegBalance" ,"HSP_InputValue" ,{INHSP_Version}, "Total_Entity" ,"FY08" ,"No_Factory" ,"No_Department" ,"LE4" ,"HST")
+FIX("No_Brand")
+
+/*"EXP_AFR_76003" = #Missing;*/
+"Local" = #Missing;
+
+ENDFIX
+ENDFIX
+
+
+
+
+
+
+
+
+
+
+String s1 = 'abcdbca';
+String target = 'bc';
+String replacement = 'xy';
+String s2 = s1.replace(target, replacement);
+System.assertEquals('axydxya', s2);
+
+
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+    <title>Code Beautifier</title>
+
+    <script type="text/javascript">
+        function Beautify() {
+            var beauty = new Beautifier();
+            var language = document.getElementById("language");
+            var newline = document.getElementById("newline");
+            var tabs = document.getElementById("tab_type");
+            var softtab = document.getElementById("softtab");
+            var box = document.getElementById("code");
+
+            if (newline.checked)
+                beauty.setNewline("Unix");
+            else
+                beauty.setNewline("Windows");
+
+            if (tabs.checked)
+                beauty.setSoftTab(softtab.value);
+            else
+                beauty.setHardTab();
+
+            beauty.setLanguage(language.value);
+            //box.value = beauty.beautify(box.value);
+            document.getElementById("ResultData").value = beauty.beautify(box.value);
+
+        }
+
+
+        function Beautifier() {
+            // constants
+            // - language constants
+            this.LANG_HTML = 0;
+            this.LANG_OTHER = 1;
+            // - side constants
+            this.SIDE_LEFT = 0;
+            this.SIDE_RIGHT = 1;
+            this.SIDE_BOTH = 2;
+            // - newline constants
+            this.NEWLINE_WINDOWS = "\r\n";
+            this.NEWLINE_UNIX = "\n";
+
+
+            // fields
+            this.tab = "\t"; // tab string (hard or soft tabs)
+            this.language = this.LANG_OTHER;
+            this.code = ""; // code to beautify
+            this.newline = this.NEWLINE_WINDOWS; // newline character 
+
+            // methods
+            this.setSoftTab = function(size) // this function sets the option to use soft tabs, and how many spaces for it
+                {
+                    this.tab = this.repeat(" ", size);
+                }
+
+            this.setHardTab = function() // function to set the option to use hard tabs
+                {
+                    this.tab = "\t";
+                }
+
+            this.setLanguage = function(lang) {
+                lang = lang.toLowerCase();
+                switch (lang) {
+                    case "html":
+                        this.language = this.LANG_HTML;
+                        break;
+                    default:
+                        this.language = this.LANG_OTHER;
+                }
+            }
+
+            this.setNewline = function(os) {
+                os = os.toLowerCase();
+                if (os == "unix")
+                    this.newline = this.NEWLINE_UNIX;
+
+                else if (os == "windows")
+                    this.newline = this.NEWLINE_WINDOWS;
+            }
+
+            this.repeat = function(str, times) // repeats a string a set number of times
+                {
+                    var output = "";
+
+                    for (var i = 0; i < times; i++)
+                        output += str;
+
+                    return output;
+                }
+
+            this.replaceAll = function(haystack, needle, replacement) // replaces all instances of needle with replacement
+                {
+                    var regex = new RegExp(needle, "g");
+                    return haystack.replace(regex, replacement);
+                }
+
+            this.insert = function(str, str2, pos) {
+                return str.substring(0, pos) + str2 + str.substring(pos, str.length);
+            }
+
+            this.parse = function() // parses a string into an array, but ignores if in a string literal
+                {
+                    var parsed = [];
+                    var literal = false; // inside string quotes or not
+                    var start = 0;
+
+                    if (this.language == this.LANG_HTML) {
+                        // parsing HTML will require more work with substrings
+                        // search for the start of tags "<" and find the matching ">" character
+                        var end = 0;
+
+                        start = this.code.indexOf("<");
+                        while (start > -1) {
+                            end = this.code.indexOf(">", start + 1);
+                            if (end == -1)
+                                end = this.code.length - 1;
+                            else
+                                end = end + 1;
+
+                            var tag = this.code.substring(start, end);
+                            parsed.push(tag);
+
+                            // get next tag
+                            start = this.code.indexOf("<", end);
+
+                            // get the stuff between the tags
+                            var between = "";
+                            if (start == -1)
+                                between = this.code.substring(end, this.code.length);
+                            else
+                                between = this.code.substring(end, start);
+
+                            if (this.trim(between) != "")
+                                parsed.push(between);
+                        }
+
+                    } else if (this.language == this.LANG_OTHER) {
+                        for (var i = 0; i < this.code.length; i++) {
+                            if (i == this.code.length - 1) // on the last iteration
+                            {
+                                parsed.push(this.code.substring(start, this.code.length));
+                                break;
+                            }
+
+
+                            var c = this.code.charAt(i);
+                            if (c == "\"") {
+                                // check for escaped quotes
+                                if (i > 0 && this.code.charAt(i - 1) != "\\") {
+                                    if (literal)
+                                        literal = false;
+                                    else
+                                        literal = true;
+                                }
+
+                                continue;
+                            }
+
+                            if (!literal) {
+                                if (c == ";") {
+                                    parsed.push(this.code.substring(start, i + 1));
+                                    start = i + 1;
+                                } else if (c == "{" || c == "}") {
+                                    // don't add blank lines to the array
+                                    var line = this.code.substring(start, i);
+                                    if (this.trim(line) != "")
+                                        parsed.push(this.code.substring(start, i));
+
+                                    parsed.push(c);
+                                    start = i + 1;
+                                }
+
+                                // pad equal signs
+                                else if (c == "=") {
+                                    // check if the previous and next characters are equal signs
+                                    if (i == 0)
+                                        continue;
+                                    var prev = this.code.charAt(i - 1);
+
+                                    if (i == this.code.length)
+                                        continue;
+                                    var next = this.code.charAt(i + 1);
+
+                                    if (prev != "=" && prev != " ") {
+                                        this.code = this.insert(this.code, " ", i);
+                                        i++;
+                                    }
+
+                                    if (next != "=" && next != " ") {
+                                        this.code = this.insert(this.code, " ", i + 1);
+                                        i++;
+                                    }
+                                }
+
+                            }
+                        } // end of for loop
+
+                    } // end of if
+
+                    return parsed;
+                }
+
+            this.trim = function(input, side) {
+                if (side == this.SIDE_LEFT)
+                    return input.replace(/^\s*/, "");
+
+                else if (side == this.SIDE_RIGHT)
+                    return input.replace(/\s*$/, "");
+
+                else
+                    return input.replace(/^\s*|\s*$/g, "");
+            }
+
+            this.beautify = function(code) // main beautify code
+                {
+                    this.code = this.replaceAll(code, "\n|\r\n", "");
+                    var parsed = [];
+                    var indent = 0; // keeps track of the number of tabs to insert for a new line
+
+                    var parsed = this.parse();
+                    if (this.language == this.LANG_HTML) {
+                        for (var i = 0; i < parsed.length; i++) {
+                            parsed[i] = this.trim(parsed[i], this.SIDE_BOTH);
+
+                            // make sure we're not on a single tag element
+                            var find = parsed[i].indexOf("/>");
+
+                            if (parsed[i].charAt(0) == "<" && find == -1) {
+                                if (parsed[i].charAt(1) == "/") // ending tag
+                                {
+                                    indent--;
+                                    parsed[i] = this.repeat(this.tab, indent) + parsed[i];
+                                } else // not ending tag
+                                {
+                                    parsed[i] = this.repeat(this.tab, indent) + parsed[i];
+                                    indent++;
+                                }
+                            } else {
+                                parsed[i] = this.repeat(this.tab, indent) + parsed[i];
+                            }
+
+                        } // end of for loop
+
+
+                    }
+                    // other
+                    else if (this.language == this.LANG_OTHER) {
+                        for (var i = 0; i < parsed.length; i++) {
+                            parsed[i] = this.trim(parsed[i], this.SIDE_BOTH);
+
+                            if (parsed[i] == "{") {
+                                parsed[i] = this.repeat(this.tab, indent) + parsed[i];
+                                indent++;
+                                continue;
+                            } else if (parsed[i] == "}") {
+                                if (indent > 0)
+                                    indent--;
+
+                                parsed[i] = this.repeat(this.tab, indent) + parsed[i];
+                                continue;
+                            } else {
+                                parsed[i] = this.repeat(this.tab, indent) + parsed[i];
+                            }
+                        } // end of for loop				
+                    }
+
+                    return parsed.join(this.newline);
+                }
+
+        }
+    </script>
+</head>
+
+<body>
+
+
+
+    <br />
+    <textarea id="code" cols="100" rows="25"></textarea>
+    <br/>
+
+    <select id="language">
+<option value="html">HTML</option>
+<option value="other">Java</option>
+</select>
+    <input type="checkbox" id="newline" />UNIX Newlines
+    <input type="checkbox" id="tab_type" />Soft Tabs
+    <input type="text" id="softtab" style="width: 20px;" value="4" />
+    <input type="button" onclick="Beautify()" value="beautify" />
+    <br/>
+    <textarea id="ResultData" cols="100" rows="50"></textarea>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+public class ASI_CRM_ADPasswordController { 
+Public user UserDetail {get;set;}  
+public boolean SaveSuccess {get;set;} 
+public boolean UpsertPermission {get;set;} 
+public string msg  {get;set;} 
+ 
+ 
+public string passwords  {get;set;}{passwords='';} 
+ 
+ 
+public boolean havePassword {get;set;} 
+ 
+ 
+public ASI_CRM_ADPasswordController() { 
+init(); 
+ 
+ 
+} 
+ 
+ 
+public void init() { 
+SaveSuccess=false; 
+ 
+ 
+UpsertPermission=true; 
+msg=''; 
+UserDetail= [Select Title,Department,ADDomainUser__c,ASI_CRM_AD_Password__c,CompanyName,FirstName,LastName,SmallPhotoUrl, FullPhotoUrl From User where id=:Userinfo.getUserid()]; 
+if(UserDetail.ASI_CRM_AD_Password__c!=null){ 
+havePassword=true; 
+}else{ 
+havePassword=false; 
+} 
+ 
+ 
+} 
+ 
+ 
+ 
+ 
+public void save() { 
+ 
+ 
+System.Savepoint pSavepoint = Database.setSavepoint(); 
+try 
+{ 
+UserDetail.ASI_CRM_AD_Password__c=passwords; 
+update UserDetail; 
+SaveSuccess=true; 
+}catch(Exception e){ 
+UpsertPermission=false; 
+msg += 'Save Error : ' +e.getMessage() + '</br>'; 
+Database.rollback(pSavepoint);   
+}  
+} 
+ 
+ 
+public void ResetPassword(){ 
+passwords=null; 
+SaveSuccess=false; 
+havePassword=false; 
+} 
+ 
+ 
+ 
+ 
+} 
+ 
+ 
+ <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>Code Beautifier</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  
+<script type="text/javascript">
+	function Beautify()
+	{
+		var beauty = new Beautifier();
+		var language = document.getElementById("language");
+		var newline = document.getElementById("newline");
+		var tabs = document.getElementById("tab_type");
+		var softtab = document.getElementById("softtab");
+		var box = document.getElementById("code");
+		
+		if (newline.checked)
+			beauty.setNewline("Unix");
+		else
+			beauty.setNewline("Windows");
+		
+		if (tabs.checked)
+			beauty.setSoftTab(softtab.value);
+		else
+			beauty.setHardTab();
+		
+		beauty.setLanguage(language.value);
+		//box.value = beauty.beautify(box.value);
+		document.getElementById("ResultData").value=beauty.beautify(box.value);
+		
+	}
+	
+	
+function Beautifier()
+{
+	// constants
+	// - language constants
+	this.LANG_HTML  = 0;
+	this.LANG_OTHER = 1;
+	// - side constants
+	this.SIDE_LEFT  = 0;
+	this.SIDE_RIGHT = 1;
+	this.SIDE_BOTH  = 2;
+	// - newline constants
+	this.NEWLINE_WINDOWS = "\r\n";
+	this.NEWLINE_UNIX    = "\n";
+
+	
+	// fields
+	this.tab      = "\t";						// tab string (hard or soft tabs)
+	this.language = this.LANG_OTHER;
+	this.code     = "";							// code to beautify
+	this.newline  = this.NEWLINE_WINDOWS;		// newline character 
+	
+	// methods
+	this.setSoftTab = function(size)		// this function sets the option to use soft tabs, and how many spaces for it
+	{
+		this.tab = this.repeat(" ", size);
+	}
+	
+	this.setHardTab = function()		// function to set the option to use hard tabs
+	{
+		this.tab = "\t";
+	}
+	
+	this.setLanguage = function(lang)
+	{
+	   lang = lang.toLowerCase();
+		switch (lang)
+		{
+			case "html":
+				this.language = this.LANG_HTML;
+				break;
+			default:
+				this.language = this.LANG_OTHER;
+		}
+	}
+	
+	this.setNewline = function(os)
+	{
+		os = os.toLowerCase();
+		if (os == "unix")
+			this.newline = this.NEWLINE_UNIX;
+		
+		else if (os == "windows")
+			this.newline = this.NEWLINE_WINDOWS;
+	}
+	
+	this.repeat = function(str, times)			// repeats a string a set number of times
+	{
+		var output = "";
+		
+		for (var i=0; i<times; i++)
+			output += str;
+		
+		return output;
+	}
+	
+	this.replaceAll = function(haystack, needle, replacement)			// replaces all instances of needle with replacement
+	{
+		var regex = new RegExp(needle, "g");
+		return haystack.replace(regex, replacement);
+	}
+	
+	this.insert = function(str, str2, pos)
+	{
+		return str.substring(0, pos) + str2 + str.substring(pos, str.length);
+	}
+	
+	this.parse = function()				// parses a string into an array, but ignores if in a string literal
+	{
+		var parsed = [];
+		var literal = false;			// inside string quotes or not
+		var start = 0;
+		
+		if (this.language == this.LANG_HTML)
+		{
+			// parsing HTML will require more work with substrings
+			// search for the start of tags "<" and find the matching ">" character
+			var end = 0;
+			
+			start = this.code.indexOf("<");
+			while (start > -1)
+			{
+				end = this.code.indexOf(">", start+1);
+				if (end == -1)
+					end = this.code.length-1;
+				else
+					end = end + 1;
+				
+				var tag = this.code.substring(start, end);
+				parsed.push(tag);
+				
+				// get next tag
+				start = this.code.indexOf("<", end);
+				
+				// get the stuff between the tags
+				var between = "";
+				if (start == -1)
+					between = this.code.substring(end, this.code.length);
+				else
+					between = this.code.substring(end, start);
+				
+				if (this.trim(between) != "")
+					parsed.push(between);
+			}
+		
+		}
+		
+		else if (this.language == this.LANG_OTHER)
+		{
+			for (var i=0; i<this.code.length; i++)
+			{
+				if (i == this.code.length-1)		// on the last iteration
+				{
+					parsed.push(this.code.substring(start, this.code.length));
+					break;
+				}
+					
+				
+				var c = this.code.charAt(i);
+				if (c == "\"")
+				{
+					// check for escaped quotes
+					if (i > 0 && this.code.charAt(i-1) != "\\")
+					{
+						if (literal)
+							literal = false;
+						else
+							literal = true;
+					}
+					
+					continue;
+				}
+				
+				if (!literal)
+				{
+					if (c == ";")
+					{
+						parsed.push(this.code.substring(start, i+1));
+						start = i+1;
+					}
+					
+					else if (c == "{" || c == "}")
+					{
+						// don't add blank lines to the array
+						var line = this.code.substring(start, i);
+						if (this.trim(line) != "")
+							parsed.push(this.code.substring(start, i));
+						
+						parsed.push(c);
+						start = i+1;
+					}
+					
+					// pad equal signs
+					else if (c == "=")
+					{
+						// check if the previous and next characters are equal signs
+						if (i == 0)
+							continue;
+						var prev = this.code.charAt(i-1);
+						
+						if (i == this.code.length)
+							continue;
+						var next = this.code.charAt(i+1);
+						
+						if (prev != "=" && prev != " ")
+						{
+							this.code = this.insert(this.code, " ", i);
+							i++;
+						}
+						
+						if (next != "=" && next != " ")
+						{
+							this.code = this.insert(this.code, " ", i+1);
+							i++;
+						}
+					}
+					
+				}
+			}	// end of for loop
+									
+		}		// end of if
+		
+		return parsed;
+	}
+	
+	this.trim = function(input, side)
+	{
+		if (side == this.SIDE_LEFT)
+			return input.replace(/^\s*/, "");
+		
+		else if (side == this.SIDE_RIGHT)
+			return input.replace(/\s*$/, "");
+		
+		else
+			return input.replace(/^\s*|\s*$/g, "");
+	}
+	
+	this.beautify = function(code)				// main beautify code
+	{		
+		this.code = this.replaceAll(code, "\n|\r\n", "");
+		var parsed = [];
+		var indent = 0;				// keeps track of the number of tabs to insert for a new line
+		
+		var parsed = this.parse();
+		if (this.language == this.LANG_HTML)
+		{
+			for (var i=0; i<parsed.length; i++)
+			{
+				parsed[i] = this.trim(parsed[i], this.SIDE_BOTH);
+
+				// make sure we're not on a single tag element
+				var find = parsed[i].indexOf("/>");				
+				
+				if (parsed[i].charAt(0) == "<" && find == -1)
+				{
+					if (parsed[i].charAt(1) == "/")		// ending tag
+					{
+						indent--;
+						parsed[i] = this.repeat(this.tab, indent) + parsed[i];
+					}
+					else								// not ending tag
+					{
+						parsed[i] = this.repeat(this.tab, indent) + parsed[i];
+						indent++;
+					}	
+				}
+				else
+				{
+					parsed[i] = this.repeat(this.tab, indent) + parsed[i];
+				}
+				
+			}	// end of for loop
+			
+			
+		}
+			// other
+		else if (this.language == this.LANG_OTHER)
+		{
+			for (var i=0; i<parsed.length; i++)
+			{
+				parsed[i] = this.trim(parsed[i], this.SIDE_BOTH);
+				
+				if (parsed[i] == "{")
+				{
+					parsed[i] = this.repeat(this.tab, indent) + parsed[i];
+					indent++;
+					continue;
+				}
+					
+				else if (parsed[i] == "}")
+				{
+					if (indent > 0)
+						indent--;
+						
+					parsed[i] = this.repeat(this.tab, indent) + parsed[i];
+					continue;
+				}
+					
+				else
+				{
+					parsed[i] = this.repeat(this.tab, indent) + parsed[i];
+				}
+			}	// end of for loop				
+		}
+		
+		return parsed.join(this.newline);
+	}
+	
+}
+
+</script>
+</head>
+<body>
+	<br/>
+	<textarea id="code" cols="100" rows="25">
+	</textarea>
+	
+	<br/>
+	<div class="col-xs-1">
+		<select id="language" class="form-control" >
+			<option value="html">
+				HTML
+			</option>
+			<option value="other">
+				Java
+			</option>
+		</select>
+	</div>
+	<input type="checkbox" id="newline" />
+	UNIX Newlines
+	<input type="checkbox" id="tab_type" />
+	Soft Tabs
+	<input type="text" id="softtab" style="width: 20px;" value="4" class="form-control"  />
+	<input type="button" onclick="Beautify()" value="beautify"   class="btn btn-default" />
+	<br/>
+	<textarea id="ResultData" cols="100" rows="50">
+	</textarea>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+ 
