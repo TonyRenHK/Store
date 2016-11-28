@@ -738,6 +738,1058 @@ ENDFIX
 
 
 
+SET CACHE HIGH;
+SET UPDATECALC OFF;
+
+SET CLEARUPDATESTATUS OFF;
+SET LOCKBLOCK HIGH;
+
+
+/* to check if the rules have been running. If ancestor is already running, existing rules should be stopped. 20160405 WC */
+SET CREATEBLOCKONEQ ON;
+FIX("Int" ,"BegBalance" ,"HSP_InputValue" ,{INHSP_Version} , {INHSP_Ent},"FY08" ,"No_Factory" ,"No_Department" ,"LE4" ,"HST")
+FIX("No_Brand")
+
+"Local" (
+IF (@ANCESTVAL("Entity",1,{INHSP_Ent}) > 0 or 
+@ANCESTVAL("Entity",2,{INHSP_Ent}) > 0 or 
+@ANCESTVAL("Entity",3,{INHSP_Ent}) > 0 or 
+@ANCESTVAL("Entity",4,{INHSP_Ent}) > 0 or 
+@ANCESTVAL("Entity",5,{INHSP_Ent}) > 0 or 
+@ANCESTVAL("Entity",6,{INHSP_Ent}) > 0 or 
+@ANCESTVAL("Entity",7,{INHSP_Ent}) > 0 or 
+@ANCESTVAL("Entity",8,{INHSP_Ent}) > 0 or 
+"Local" > 0)
+
+@RETURN (@CONCATENATE(@CONCATENATE("PL_Int_ rule has been triggered for ancestor of or member [", @NAME(@CURRMBR({INHSP_Ent}))), "]. Please wait for existing rule to complete running before triggering this rule again. Status of Business Rules can be checked from Tools -> Job Console."), ERROR);
+
+ELSE
+
+"Local" = 1;
+
+
+ENDIF
+
+)
+
+ENDFIX
+ENDFIX
+
+SET CREATEBLOCKONEQ OFF;
+
+
+/* Update on 09-Jan-2012 for calculation of Transfer Price Region BII */
+/* Copy Transfer Price Region (BII) from Budget to Current Scenario. */
+/* Update on 16-Apr-2015 for calculation of Distribution Cost TP Region BII */
+/* Copy DC Transfer Price Region (BII) from Budget to Current Scenario. */
+FIX("HTPRAC","HTPR9L")
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+FIX("No_Factory")
+FIX("No_Department", "Local")
+FIX("No_Entity")
+FIX(@RELATIVE("RateArea_Group_Reporting_BII",0) AND @DESCENDANTS({INHSP_Ent}))
+FIX("Int")
+FIX(&CurMonth:"Jun")
+&CurScenario = "B";
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+FIX("HDCTPAC","HDCTP9L")
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+FIX(@RELATIVE("Other_Factory",0))
+FIX("No_Department", "Local")
+FIX(@RELATIVE("RateArea_Group_Reporting_BII",0) AND @DESCENDANTS({INHSP_Ent}))
+FIX("Int")
+FIX(&CurMonth:"Jun")
+&CurScenario = "B";
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/* Allocates Actual Cases and 9L Cases to Rate Areas under BII*/
+FIX("Int")
+FIX(&CurMonth:"Jun")
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+FIX("No_Factory")
+FIX("Local", &CurScenario, "No_Department")
+FIX(@RELATIVE("RateArea_Group_Reporting_BII",0) AND @DESCENDANTS({INHSP_Ent}))
+FIX(@RELATIVE("BrandPack_Group_BII",0))
+"HTPRAC" = "HTPRAC" -> "No_Entity" -> "No_Factory";
+"HTPR" = "HTPR9L" -> "No_Entity" -> "No_Factory";
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+
+/******* Calculate Internal Budgeting ***********/
+/* Calculate P&L account lines for Volume and Production(Brand-Pack Level) - BII */
+FIX(&CurMonth:"Jun")
+FIX("Int")
+FIX(@RELATIVE("Other_Factory",0), "No_Factory")
+FIX(@RELATIVE("RateArea_Group_Reporting_BII",0) AND @DESCENDANTS({INHSP_Ent}))
+FIX(@RELATIVE("BrandPack_Group_BII",0))
+FIX(&CurScenario,"No_Department", "Local")
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+"3010.K9L_CAL"
+(
+/* Calculate Volume (K9L) */
+"3010.K9L_CAL" = "HV9L" / 1000;
+/* Calculate Volume (KL) */
+"3010.KL_CAL" = "3010.K9L_CAL" * 9;
+/* Calculate Gross Sales Incl. T&D */
+"3010.GS_CAL" = "HNS" * "HV9L";
+/* HPCurr = 1 (INR), HPCurr = 2 (USD), HPCurr = 3 (GBP)*/
+/* INR */
+IF("HPCurr"->"BegBalance" == 1)
+"3010.GS_CAL_INR" = "HP" * "HV9L";
+/* USD */
+ELSEIF("HPCurr"->"BegBalance" == 2)
+"3010.GS_CAL_USD" = "HP" * "HV9L";
+/* GBP */
+ELSEIF("HPCurr"->"BegBalance" == 3)
+"3010.GS_CAL_GBP" = "HP" * "HV9L";
+ENDIF
+/* Calculate Production Cost Direct Overheads */
+"4010.PCDO_CAL" = "HPCDO" -> "No_Entity" * "HV9L" * -1;
+/* Calculate Production Cost Indirect Overheads */
+"6000.PCIO_CAL" = "HPCIO" * -1;
+/* Calculate Production Cost Depreciation */
+"9212.DP_CAL" = "HPCDP" * -1;
+/* Calculate Cost of Goods Sold ST/Non-ST */
+/* If Brand is Non-ST Brand */
+IF("HST" -> "BegBalance" -> "No_Factory" -> "No_Entity" -> "Int" > 0)
+"4010.NST_CAL" = "HCOGSNONST" -> "No_Entity" / "HQty" -> "BegBalance" -> "Int" -> "No_Entity" -> "No_Factory" / "HBtlpCs" -> "BegBalance" -> "Int" -> "No_Entity" -> "No_Factory" * 900 * "HV9L" * -1;
+"4010.ST_CAL" = #Missing;
+"4010.STR_CAL" = "HTPR" * "HV9L" -> "Other_Factory" * -1;
+/* If Brand is ST Brand */
+ELSEIF("HST" -> "BegBalance" -> "No_Factory" -> "No_Entity" -> "Int" == 0)
+"4010.NST_CAL" = "HCOGSNONST" -> "No_Entity" / "HQty" -> "BegBalance" -> "Int" -> "No_Entity" -> "No_Factory" / "HBtlpCs" -> "BegBalance" -> "Int" -> "No_Entity" -> "No_Factory" * 900 * "HV9L" * -1;
+/* "4010.ST_CAL" = "HTPFOBPI" * "HV9L" -> "Other_Factory" * -1; */
+"4010.STR_CAL" = "HTPR" * "HV9L" -> "Other_Factory" * -1;
+ENDIF
+/* Calculate Total Handling Costs - T&D */
+"4011.DUT_CAB_CAL" = "HHCTDCAB" -> "No_Factory" -> "No_Entity" * "HV9L"  * -1;
+/* Calculate Total Handling Costs - Others */
+"4011.HAN_IF_CAL" = "HHCOIF" -> "No_Entity" * "HV9L"  * -1;
+"4011.HAN_II_CAL" = "HHCOII" -> "No_Entity" * "HV9L"  * -1;
+)
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Calculate Distribution Costs TP - Region */
+FIX(&CurMonth:"Jun")
+FIX("Int")
+FIX("No_Factory")
+FIX(@RELATIVE("RateArea_Group_Reporting_BII",0) AND @DESCENDANTS({INHSP_Ent}))
+FIX(@RELATIVE("BrandPack_Group_BII",0))
+FIX(&CurScenario,"No_Department", "Local")
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+"5301.TP_CAL"
+(
+"5301.TP_CAL" = "HDCTP" * "HV9L" -> "Other_Factory" * -1;
+)
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/* Updated on 2014-06-19 by Connie Liang */
+FIX(&CurMonth:"Jun")
+FIX("Int")
+FIX(@RELATIVE("Other_Factory",0))
+FIX(@RELATIVE("RateArea_Group_Reporting_BII",0) AND @DESCENDANTS({INHSP_Ent}))
+FIX(@RELATIVE("BrandPack_Group_BII",0))
+FIX(&CurScenario,"No_Department", "Local")
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+"3010.K9L_CAL"
+(
+IF("HST" -> "BegBalance" -> "No_Factory" -> "No_Entity" -> "Int" == 0)
+  "4010.ST_CAL" = "HTPFOBPI" -> "No_Factory" -> "Int" * "HV9L" * -1;
+ENDIF
+)
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Calculate P&L account lines for Volume and Production(Brand-Pack Level) - BIO */
+FIX(&CurMonth:"Jun")
+FIX("Int")
+FIX("No_Factory")
+FIX(@RELATIVE("RateArea_Group_Reporting_BIO",0) AND @DESCENDANTS({INHSP_Ent}))
+FIX(@RELATIVE("BrandPack_Group_BIO",0))
+FIX(&CurScenario,"No_Department", "Local")
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+"3010.K9L_CAL" (
+/* Calculate Volume (K9L) */
+"3010.K9L_CAL" = "HV9L" / 1000;
+/* Calculate Volume (KL) */
+"3010.KL_CAL" = "3010.K9L_CAL" * 9;
+/* Calculate Gross Sales Incl. T&D */
+"3010.GS_CAL" = "HNS" * "HV9L";
+/* HPCurr = 1 (INR), HPCurr = 2 (USD), HPCurr = 3 (GBP)*/
+/* INR */
+IF("HPCurr"->"BegBalance" == 1)
+"3010.GS_CAL_INR" = "HP" * "HV9L";
+/* USD */
+ELSEIF("HPCurr"->"BegBalance" == 2)
+"3010.GS_CAL_USD" = "HP" * "HV9L";
+/* GBP */
+ELSEIF("HPCurr"->"BegBalance" == 3)
+"3010.GS_CAL_GBP" = "HP" * "HV9L";
+ENDIF
+)
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/* Aggregate Factory for further calculation */
+FIX("3010.KL_CAL","HV9L")
+FIX("Int")
+FIX(&CurMonth:"Jun")
+FIX("HSP_InputValue")
+FIX("Local")
+FIX({INHSP_Version})
+FIX(&CurYear)
+FIX("No_Department")
+FIX(&CurScenario)
+FIX(@RELATIVE("RateArea_Group",0))
+FIX(@RELATIVE("BrandPack_Group",0) AND @DESCENDANTS({INHSP_Ent}))
+"Other_Factory";
+"Total_Factory";
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/******* Calculate Internal Budgeting BII ***********/
+/* Calculate P&L account lines (Brand-Pack Level) */
+FIX("Int")
+FIX(&CurMonth:"Jun")
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+FIX("No_Factory")
+FIX(&CurScenario,"No_Department", "Local")
+FIX(@RELATIVE("RateArea_Group_Reporting_BII",0) AND @DESCENDANTS({INHSP_Ent}))
+FIX(@RELATIVE("BrandPack_Group_BII",0))
+"3010.K9L_CAL" (
+/* Calculate Allowance and Discount */
+"5203.KIND_CAL" = "HADPSK." * "HV9L" -> "Other_Factory" * -1;
+"5203.PRIMARY_CAL" = "HADPSC." * "HV9L" -> "Other_Factory" * -1;
+"5203.SECOND_CAL" = "HADSSC." * "HV9L" -> "Other_Factory" * -1;
+"5204.ATB_CAL" = "HADTBATB." * "HV9L" -> "Other_Factory" * -1;
+"5204.OCTROI_CAL" = "HADSSO." * "HV9L" -> "Other_Factory" * -1;
+"5204.QTB_CAL" = "HADTBQTB." * "HV9L" -> "Other_Factory" * -1;
+"5204.SONARY_CAL" = "HADS." * "HV9L" -> "Other_Factory" * -1;
+/* Calculate Standard Costs */
+/* If Current Scenario is get, Foreign Exchange on Standard Costs equal to 0 */
+/* IF(@ISMBR("B"))
+IF(@ISUDA(Entity,"INR"))
+"HFXSTDC_CAL" = #Missing;
+"HSTDC_CAL" = "HSC_B" -> "No_Factory" -> "PR_India_Input" * "3010.KL_CAL" -> "Total_Factory" -> "Int" * -1 * 1000;
+ELSEIF(@ISUDA(Entity,"USD"))
+"HFXSTDC_CAL" = #Missing;
+"HSTDC_CAL" = "HSC_B" -> "No_Factory" -> "PR_Gulf_Input" * "3010.KL_CAL" -> "Total_Factory" -> "Int" * -1 * 1000;
+ENDIF */
+/* If Current Scenario is not equal to get, calculate Foreign Exchange on Standard Costs based on Current Year get */
+/* ELSE
+IF(@ISUDA(Entity,"INR"))
+"HFXSTDC_CAL" = "HSC" -> "No_Factory" -> "PR_India_Input" * "3010.KL_CAL" -> "Total_Factory" -> "Int" * -1 - "HSC_B" -> "No_Factory" -> "PR_India_Input" * "3010.KL_CAL" -> "Total_Factory" -> "Int" * -1;
+"HSTDC_CAL" = "HSC_B" -> "No_Factory" -> "PR_India_Input" * "3010.KL_CAL" -> "Total_Factory" -> "Int" * -1 * 1000;
+ELSEIF(@ISUDA(Entity,"USD"))
+"HFXSTDC_CAL" = "HSC" -> "No_Factory" -> "PR_Gulf_Input" * "3010.KL_CAL" -> "Total_Factory" -> "Int" * -1 - "HSC_B" -> "No_Factory" -> "PR_Gulf_Input" * "3010.KL_CAL" -> "Total_Factory" -> "Int" * -1;
+"HSTDC_CAL" = "HSC_B" -> "No_Factory" -> "PR_Gulf_Input" * "3010.KL_CAL" -> "Total_Factory" -> "Int" * -1 * 1000;
+ENDIF
+ENDIF */
+/* Calculate Distribution Costs */
+"5301.BE_CAL" = "HDCBE" * "HV9L" -> "Other_Factory" * -1;
+"5353_CAL" = "HDCBEV" * "HV9L" -> "Other_Factory" * -1;
+"5301.BR_CAL" = "HDCBR" * "HV9L" -> "Other_Factory" * -1;
+"5301.DT_CAL" = "HDCTD" * "HV9L" -> "Other_Factory" * -1;
+"5301.F_CAL" = "HDCF" * "HV9L" -> "Other_Factory" * -1;
+"5301.TSB_CAL" = "HDCTS" * "HV9L" -> "Other_Factory" * -1;
+"5301.OTH_CAL" = "HDCV" * "HV9L" -> "Other_Factory" * -1;
+"5301.O_CAL" = "HDCO" * "HV9L" -> "Other_Factory" * -1;
+"5301.PC_CAL" = "HDCPC" * "HV9L" -> "Other_Factory" * -1;
+"6381.M_CAL" = "HDCIPM" * "HV9L" -> "Other_Factory" * -1;
+"5301.S_CAL" = "HDCS" * "HV9L" -> "Other_Factory" * -1;
+"5301.TSP_CAL" = "HDCTSP" * "HV9L" -> "Other_Factory" * -1;
+"5301.TSS_CAL" = "HDCTSS" * "HV9L" -> "Other_Factory" * -1;
+"5301.DM_CAL" = "HDCDM" * "HV9L" -> "Other_Factory" * -1;
+"5301.DTN_CAL" = "HDCDTN" * "HV9L" -> "Other_Factory" * -1;
+
+"5342R.TS_CAL" = "HDCRTS" * "HV9L" -> "Other_Factory" * -1;
+"5380.TD_CAL" = "HDCTDC" * "HV9L" -> "Other_Factory" * -1;
+"5370.PF_CAL" = "HDCPF" * "HV9L" -> "Other_Factory" * -1;
+"5378_CAL" = "HDCODC" * "HV9L" -> "Other_Factory" * -1;
+"5377_CAL" = "HDCODB" * "HV9L" -> "Other_Factory" * -1;
+"5399_CAL" = "HDCBS" * "HV9L" -> "Other_Factory" * -1;
+"5365_CAL" = "HDCVBE" * "HV9L" -> "Other_Factory" * -1;
+)
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/* Updated on 2014-06-19 by Connie Liang */
+FIX("Int")
+FIX(&CurMonth:"Jun")
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+FIX(@RELATIVE("Other_Factory",0))
+FIX(&CurScenario,"No_Department", "Local")
+FIX(@RELATIVE("RateArea_Group_Reporting_BII",0) AND @DESCENDANTS({INHSP_Ent}))
+FIX(@RELATIVE("BrandPack_Group_BII",0))
+"3010.K9L_CAL" (
+/* Calculate Standard Costs */
+/* If Current Scenario is get, Foreign Exchange on Standard Costs equal to 0 */
+IF(@ISMBR("B"))
+IF(@ISUDA(Entity,"INR"))
+"HFXSTDC_CAL" = #Missing;
+"HSTDC_CAL" = "HSC_B" -> "No_Factory" -> "PR_India_Input" -> "Int" * "3010.KL_CAL" * -1 * 1000;
+ELSEIF(@ISUDA(Entity,"USD"))
+"HFXSTDC_CAL" = #Missing;
+"HSTDC_CAL" = "HSC_B" -> "No_Factory" -> "PR_Gulf_Input" -> "Int" * "3010.KL_CAL" * -1 * 1000;
+ENDIF
+/* If Current Scenario is not equal to get, calculate Foreign Exchange on Standard Costs based on Current Year get */
+ELSE
+IF(@ISUDA(Entity,"INR"))
+"HFXSTDC_CAL" = "HSC" -> "No_Factory" -> "PR_India_Input" -> "Int" * "3010.KL_CAL" * -1 - "HSC_B" -> "No_Factory" -> "PR_India_Input" -> "Int" * "3010.KL_CAL" * -1;
+"HSTDC_CAL" = "HSC_B" -> "No_Factory" -> "PR_India_Input" -> "Int" * "3010.KL_CAL" * -1 * 1000;
+ELSEIF(@ISUDA(Entity,"USD"))
+"HFXSTDC_CAL" = "HSC" -> "No_Factory" -> "PR_Gulf_Input" -> "Int" * "3010.KL_CAL" * -1 - "HSC_B" -> "No_Factory" -> "PR_Gulf_Input" -> "Int" * "3010.KL_CAL" * -1;
+"HSTDC_CAL" = "HSC_B" -> "No_Factory" -> "PR_Gulf_Input" -> "Int" * "3010.KL_CAL" * -1 * 1000;
+ENDIF
+ENDIF
+)
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/******* Calculate Internal Budgeting BIO***********/
+/* Calculate P&L account lines (Brand-Pack Level) */
+FIX("Int")
+FIX(&CurMonth:"Jun")
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+FIX("No_Factory")
+FIX(&CurScenario,"No_Department", "Local")
+FIX(@RELATIVE("RateArea_Group_Reporting_BIO",0) AND @DESCENDANTS({INHSP_Ent}))
+FIX(@RELATIVE("BrandPack_Group_BIO",0))
+"3010.K9L_CAL" (
+/* Calculate Allowance and Discount */
+"5203.KIND_CAL" = "HADPSK." * "HV9L" * -1;
+"5203.PRIMARY_CAL" = "HADPSC." * "HV9L" * -1;
+"5203.SECOND_CAL" = "HADSSC." * "HV9L" * -1;
+"5204.ATB_CAL" = "HADTBATB." * "HV9L" * -1;
+"5204.OCTROI_CAL" = "HADSSO." * "HV9L" * -1;
+"5204.QTB_CAL" = "HADTBQTB." * "HV9L" * -1;
+"5204.SONARY_CAL" = "HADS." * "HV9L" * -1;
+/* Calculate Standard Costs */
+/* If Current Scenario is get, Foreign Exchange on Standard Costs equal to 0 */
+IF(@ISMBR("B"))
+IF(@ISUDA(Entity,"INR"))
+"HFXSTDC_CAL" = 0;
+"HSTDC_CAL" = "HSC_B" -> "No_Factory" -> "PR_India_Input" * "3010.KL_CAL" -> "Total_Factory" -> "Int" * -1 * 1000;
+ELSEIF(@ISUDA(Entity,"USD"))
+"HFXSTDC_CAL" = 0;
+"HSTDC_CAL" = "HSC_B" -> "No_Factory" -> "PR_Gulf_Input" * "3010.KL_CAL" -> "Total_Factory" -> "Int" * -1 * 1000;
+ENDIF
+/* If Current Scenario is not equal to get, calculate Foreign Exchange on Standard Costs based on Current Year get */
+ELSE
+IF(@ISUDA(Entity,"INR"))
+"HFXSTDC_CAL" = "HSC" -> "No_Factory" -> "PR_India_Input" * "3010.KL_CAL" -> "Total_Factory" -> "Int" * -1 * 1000 - "HSC_B" -> "No_Factory" -> "PR_India_Input" * "3010.KL_CAL" -> "Total_Factory" -> "Int" * -1 * 1000;
+"HSTDC_CAL" = "HSC_B" -> "No_Factory" -> "PR_India_Input" * "3010.KL_CAL" -> "Total_Factory" -> "Int" * -1 * 1000;
+ELSEIF(@ISUDA(Entity,"USD"))
+"HFXSTDC_CAL" = "HSC" -> "No_Factory" -> "PR_Gulf_Input" * "3010.KL_CAL" -> "Total_Factory" -> "Int" * -1 * 1000 - "HSC_B" -> "No_Factory" -> "PR_Gulf_Input" * "3010.KL_CAL" -> "Total_Factory" -> "Int" * -1 * 1000;
+"HSTDC_CAL" = "HSC_B" -> "No_Factory" -> "PR_Gulf_Input" * "3010.KL_CAL" -> "Total_Factory" -> "Int" * -1 * 1000;
+ENDIF
+ENDIF
+/* Calculate Cost of Goods Sold ST/Non-ST */
+/* If Brand is Non-ST Brand */
+IF("HST"->"BegBalance"->"No_Factory"->"No_Entity"->"Int" > 0)
+IF(@ISUDA(Entity,"INR"))
+"4010.NST_CAL" = "HCOGSNONST" -> "PR_India_Input" -> "B" / "HQty" -> "BegBalance" -> "Int" -> "No_Entity" -> "No_Factory" / "HBtlpCs" -> "BegBalance" -> "Int" -> "No_Entity" -> "No_Factory" * 900 * "HV9L" * -1;
+ELSEIF(@ISUDA(Entity,"USD"))
+"4010.NST_CAL" = "HCOGSNONST" -> "PR_Gulf_Input" -> "B" / "HQty" -> "BegBalance" -> "Int" -> "No_Entity" -> "No_Factory" / "HBtlpCs" -> "BegBalance" -> "Int" -> "No_Entity" -> "No_Factory" * 900 * "HV9L" * -1;
+ENDIF
+"4010.ST_CAL" = #Missing;
+/* If Brand is ST Brand */
+ELSEIF("HST"->"BegBalance"->"No_Factory"->"No_Entity"->"Int" == 0)
+IF(@ISUDA(Entity,"INR"))
+"4010.NST_CAL" = "HCOGSNONST" -> "PR_India_Input" -> "B" / "HQty" -> "BegBalance" -> "Int" -> "No_Entity" -> "No_Factory" / "HBtlpCs" -> "BegBalance" -> "Int" -> "No_Entity" -> "No_Factory" * 900 * "HV9L" * -1;
+ELSEIF(@ISUDA(Entity,"USD"))
+"4010.NST_CAL" = "HCOGSNONST" -> "PR_Gulf_Input" -> "B" / "HQty" -> "BegBalance" -> "Int" -> "No_Entity" -> "No_Factory" / "HBtlpCs" -> "BegBalance" -> "Int" -> "No_Entity" -> "No_Factory" * 900 * "HV9L" * -1;
+ENDIF
+"4010.ST_CAL" = "HTPFOBPI" * "HV9L" * -1;
+ENDIF
+/* Calculate Distribution Costs */
+"5301.BE_CAL" = "HDCBE" * "HV9L" * -1;
+"5353_CAL" = "HDCBEV" * "HV9L" * -1;
+"5301.BR_CAL" = "HDCBR" * "HV9L" * -1;
+"5301.DT_CAL" = "HDCTD" * "HV9L" * -1;
+"5301.F_CAL" = "HDCF" * "HV9L" * -1;
+"5301.TSB_CAL" = "HDCTS" * "HV9L" * -1;
+"5301.OTH_CAL" = "HDCV" * "HV9L" * -1;
+"5301.O_CAL" = "HDCO" * "HV9L" * -1;
+"5301.PC_CAL" = "HDCPC" * "HV9L" * -1;
+"6381.M_CAL" = "HDCIPM" * "HV9L" * -1;
+"5301.S_CAL" = "HDCS" * "HV9L" * -1;
+"5301.TSP_CAL" = "HDCTSP" * "HV9L" * -1;
+"5301.TSS_CAL" = "HDCTSS" * "HV9L" * -1;
+"5301.DM_CAL" = "HDCDM" * "HV9L" * -1;
+"5301.DTN_CAL" = "HDCDTN" * "HV9L" * -1;
+
+"5342R.TS_CAL" = "HDCRTS" * "HV9L" * -1;
+"5380.TD_CAL" = "HDCTDC" * "HV9L" * -1;
+"5370.PF_CAL" = "HDCPF" * "HV9L" * -1;
+"5378_CAL" = "HDCODC" * "HV9L" * -1;
+"5377_CAL" = "HDCODB" * "HV9L" * -1;
+"5399_CAL" = "HDCBS" * "HV9L" * -1;
+"5365_CAL" = "HDCVBE" * "HV9L" * -1;
+)
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/* Update on 14-Feb-2012 for calculation of Handling Costs T&D and Handling Costs Others */
+/******* Calculate Internal Budgeting BIO only for PR-Gulf ***********/
+/* Calculate P&L account lines (Brand-Pack Level) */
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+FIX("No_Factory")
+FIX(&CurScenario,"No_Department", "Local")
+FIX(@RELATIVE("RateArea_Group_Input_Form_BIO_Gulf",0))
+FIX(@RELATIVE("BrandPack_Group_BIO",0))
+FIX("Int")
+FIX(&CurMonth:"Jun")
+"3010.K9L_CAL" (
+/* Calculate Total Handling Costs - Others */
+"4011.HAN_IF_CAL" = "HHCOIF" * "HV9L" * -1;
+"4011.HAN_II_CAL" = "HHCOII" * "HV9L" * -1;
+)
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/******* Calculate Handling Costs Others only for BIO Rate Area under PR-India ***********/
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+FIX("No_Factory")
+FIX(&CurScenario,"No_Department", "Local")
+FIX(@RELATIVE("RateArea_Group_Input_Form_BIO_India",0))
+FIX(@RELATIVE("BrandPack_Group_BIO",0))
+FIX("Int")
+FIX(&CurMonth:"Jun")
+"3010.K9L_CAL" (
+/* Calculate Total Handling Costs - Others */
+"4011.HAN_IF_CAL" = "HHCOIF" -> "No_Entity" * "HV9L" * -1;
+"4011.HAN_II_CAL" = "HHCOII" -> "No_Entity" * "HV9L" * -1;
+)
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/******* Calculate Handling Costs T&D only for BIO Rate Area Duty Paid under PR-India ***********/
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+FIX("No_Factory")
+FIX(&CurScenario,"No_Department", "Local")
+FIX(@UDA(Entity,"Duty Paid"))
+FIX(@RELATIVE("BrandPack_Group_BIO",0))
+FIX("Int")
+FIX(&CurMonth:"Jun")
+"3010.K9L_CAL" (
+/* Calculate Total Handling Costs - T&D */
+"4011.DUT_IFG_CAL" = "HHCTDF." -> "No_Entity" * "HV9L"  * -1;
+)
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/* Update on 30-Sep-2011 for calculation of Transfer Price Region BIO */
+/* Copy Transfer Price Region (BIO) from Budget to Current Scenario. */
+/* Update on 16-Apr-2011 for calculation of Distribution Costs TP Region BIO */
+/* Copy DCTP Region (BIO) from Budget to Current Scenario. */
+FIX("HTPRAC","HTPR9L","HDCTPAC","HDCTP9L")
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+FIX("No_Factory")
+FIX("No_Department", "Local")
+FIX("IBI_7_Total","IBI_8_Total")
+FIX(@RELATIVE("BrandPack_Group_BIO",0))
+FIX("Int")
+FIX(&CurMonth:"Jun")
+&CurScenario = "B";
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/*Allocates Actual Cases and 9L Cases to Rate Areas under DFEC*/
+FIX("Int")
+FIX(&CurMonth:"Jun")
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+FIX("No_Factory")
+FIX("Local", &CurScenario, "No_Department")
+FIX(@UDA(Entity,"DFEC"))
+FIX(@RELATIVE("BrandPack_Group_BIO",0))
+"HTPRAC" = "HTPRAC" -> "IBI_7_Total" -> "No_Factory";
+"HTPR" = "HTPR9L" -> "IBI_7_Total" -> "No_Factory";
+"HDCTPAC" = "HDCTPAC" -> "IBI_7_Total" -> "No_Factory";
+"HDCTP" = "HDCTP9L" -> "IBI_7_Total" -> "No_Factory";
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/*Allocates Actual Cases and 9L Cases to Rate Areas under Duty Paid*/
+FIX("Int")
+FIX(&CurMonth:"Jun")
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+FIX("No_Factory")
+FIX("Local", &CurScenario, "No_Department")
+FIX(@UDA(Entity,"Duty Paid"))
+FIX(@RELATIVE("BrandPack_Group_BIO",0))
+"HTPRAC" = "HTPRAC" -> "IBI_8_Total" -> "No_Factory";
+"HTPR" = "HTPR9L" -> "IBI_8_Total" -> "No_Factory";
+"HDCTPAC" = "HDCTPAC" -> "IBI_8_Total" -> "No_Factory";
+"HDCTP" = "HDCTP9L" -> "IBI_8_Total" -> "No_Factory";
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/* Calculate P&L account lines (Brand-Pack Level) - For DFEC & Duty Paid */
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+FIX("No_Factory")
+FIX(&CurScenario,"No_Department", "Local")
+FIX(@UDA(Entity,"Duty Paid"),@UDA(Entity,"DFEC"))
+FIX(@RELATIVE("BrandPack_Group_BIO",0))
+FIX("Int")
+FIX(&CurMonth:"Jun")
+"4010.STR_CAL" = "HTPR" * "HV9L" * -1;
+"5301.TP_CAL" = "HDCTP" * "HV9L" * -1;
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/* Update on 09-Jan-2012 for calculation logic of A&P (Changed from Region level to Rate Area level) */
+/* Calculate P&L account lines (Brand Level)*/
+FIX("Int")
+FIX(&CurMonth:"Jun")
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX(&CurYear)
+FIX("No_Factory")
+FIX(&CurScenario,"No_Department", "Local")
+FIX(@RELATIVE("RateArea_Group",0) AND @DESCENDANTS({INHSP_Ent}))
+FIX(@RELATIVE("Brand_Group",0))
+/* Calculate Trade A&P */
+"5005_CAL" = "HTAP_TE" * -1;
+"5006_CAL" = "HTAP_TP" * -1;
+"5007_CAL" = "HTAP_DCPP" * -1;
+"5008_CAL" = "HTAP_DCSOP" * -1;
+"5009_CAL" = "HTAP_DCSS" * -1;
+"5010_CAL" = "HTAP_CTSE" * -1;
+/* Calculate Consumer A&P */
+/* Calculate Media */
+"5023_CAL" = "HCAPM_C" * -1;
+"5024_CAL" = "HCAPM_O" * -1;
+"5025_CAL" = "HCAPM_I" * -1;
+"5026_CAL" = "HCAPM_P" * -1;
+"5027_CAL" = "HCAPM_R" * -1;
+"5028_CAL" = "HCAPM_TV" * -1;
+"5029_CAL" = "HCAPM_OC" * -1;
+"5030_CAL" = "HCAPM_MATU" * -1;
+"5031_CAL" = "HCAPM_DCO" * -1;
+"5032_CAL" = "HCAPM_AC" * -1;
+/* Calculate Other A&P */
+"5053_CAL" = "HCAPOAP_DME" * -1;
+"5054_CAL" = "HCAPOAP_PARF" * -1;
+"5055_CAL" = "HCAPOAP_OPE" * -1;
+"5056_CAL" = "HCAPOAP_CE" * -1;
+"5057_CAL" = "HCAPOAP_CPE" * -1;
+"5058_CAL" = "HCAPOAP_DB" * -1;
+"5059_CAL" = "HCAPOAP_ODM" * -1;
+"5060_CAL" = "HCAPOAP_PPM" * -1;
+"5061_CAL" = "HCAPOAP_MI" * -1;
+"5062_CAL" = "HCAPOAP_TS" * -1;
+"5063_CAL" = "HCAPOAP_MR" * -1;
+"5064_CAL" = "HCAPOAP_PD" * -1;
+"5065_CAL" = "HCAPOAP_ADPTV" * -1;
+"5066_CAL" = "HCAPOAP_ADPO" * -1;
+"5067_CAL" = "HCAPOAP_BC" * -1;
+"5068_CAL" = "HCAPOAP_CET" * -1;
+"5069_CAL" = "HCAPOAP_EP" * -1;
+"5070_CAL" = "HCAPOAP_EC" * -1;
+"5071_CAL" = "HCAPOAP_GR" * -1;
+"5073_CAL" = "HCAPOAP_PVGE" * -1;
+"5074_CAL" = "HCAPOAP_OSF" * -1;
+"5075_CAL" = "HCAPOAP_OODE" * -1;
+"5076_CAL" = "HCAPOAP_OPPM" * -1;
+"5077_CAL" = "HCAPOAP_ECRM" * -1;
+"5078_CAL" = "HCAPOAP_OCP" * -1;
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/* ***************************************************************************************** */
+/* **********************************For Aggregation****************************************** */
+/* ***************************************************************************************** */
+SET FRMLBOTTOMUP ON;
+/* Aggregate Brand for display */
+FIX("HVAC",@RELATIVE("P&L",0),"HV9L")
+FIX("Int")
+FIX(&CurMonth:"Jun")
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX("Local")
+FIX(&CurYear)
+FIX(@RELATIVE("Other_Factory",0), "No_Factory",@RELATIVE("HOF_PRD_OVH",0))
+FIX("No_Department")
+FIX(&CurScenario)
+FIX(@RELATIVE({INHSP_Ent},0))
+"BrandPack_Group_BII";
+"BrandPack_Group_BIO";
+"BrandPack_Group";
+"Brand_Group_BII";
+"Brand_Group_BIO";
+"Brand_Group";
+"15_Key_Brands";
+"30_Key_Brands";
+@IDESCENDANTS("RP6_Total");
+@IDESCENDANTS("Product_Segment_Total");
+@IDESCENDANTS("Mgm_Reporting_Total");
+@CHILDREN("RP6_Reporting");
+@CHILDREN("Top 14");
+@ICHILDREN("Total Strategic Brands");
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/* Aggregate Entity for display */
+FIX("HVAC",@RELATIVE("P&L",0),"HV9L")
+FIX("Int")
+FIX(&CurMonth:"Jun")
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX("Local")
+FIX(&CurYear)
+FIX(@RELATIVE("Other_Factory",0), "No_Factory",@RELATIVE("HOF_PRD_OVH",0))
+FIX("No_Department")
+FIX(&CurScenario)
+FIX("BrandPack_Group_BII","BrandPack_Group_BIO","BrandPack_Group","Brand_Group_BII","Brand_Group_BIO","Brand_Group",@IDESCENDANTS("RP6_Total"),@IDESCENDANTS("Product_Segment_Total"),@IDESCENDANTS("Mgm_Reporting_Total"),@RELATIVE("BrandPack_Group",0), "15_Key_Brands", "30_Key_Brands", @CHILDREN("RP6_Reporting"), @CHILDREN("Top 14"), @ICHILDREN("Total Strategic Brands"))
+@IDESCENDANTS({INHSP_Ent});
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/* Aggregate Factory for display */
+FIX("HVAC",@RELATIVE("P&L",0),"HV9L")
+FIX("Int")
+FIX(&CurMonth:"Jun")
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX("Local")
+FIX(&CurYear)
+FIX("No_Department")
+FIX(&CurScenario)
+FIX(@IDESCENDANTS({INHSP_Ent}))
+FIX("BrandPack_Group_BII","BrandPack_Group_BIO","BrandPack_Group","Brand_Group_BII","Brand_Group_BIO","Brand_Group",@IDESCENDANTS("RP6_Total"),@IDESCENDANTS("Product_Segment_Total"),@IDESCENDANTS("Mgm_Reporting_Total"),@RELATIVE("BrandPack_Group",0), "15_Key_Brands", "30_Key_Brands", @CHILDREN("RP6_Reporting"), @CHILDREN("Top 14"), @ICHILDREN("Total Strategic Brands"))
+"HOF_PRD_OVH";
+"Other_Factory";
+"Total_Factory";
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+/********************************************************************************************************************/
+SET CACHE HIGH;
+SET UPDATECALC OFF;
+SET CLEARUPDATESTATUS OFF;
+SET LOCKBLOCK HIGH;
+/* ***************************************************************************************** */
+/* Copy data for calculations */
+FIX("HSP_InputValue")
+FIX(&CurYear)
+FIX({INHSP_Version})
+FIX(@RELATIVE({INHSP_Ent},0))
+FIX(@RELATIVE("Other_Factory",0),"No_Factory",@RELATIVE("HOF_PRD_OVH",0))
+FIX("No_Department")
+FIX(@RELATIVE("Calculation_Group",0),"RP6_BII_Dummy")
+FIX(&CurScenario)
+FIX(@RELATIVE("YearTotal",0))
+FIX(@RELATIVE("P&L",0),"HVAC","HV9L")
+FIX("Int")
+DATACOPY "Local" TO "INR";
+DATACOPY "Local" TO "USD";
+DATACOPY "Local" TO "EUR";
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/* ***************************************************************************************** */
+/* Convert from Local currency to Euro */
+FIX("HSP_InputValue")
+FIX("EUR","INR","USD")
+FIX(&CurYear)
+FIX({INHSP_Version})
+FIX(@RELATIVE({INHSP_Ent},0))
+FIX(@RELATIVE("Other_Factory",0),"No_Factory",@RELATIVE("HOF_PRD_OVH",0))
+FIX("No_Department")
+FIX(@RELATIVE("Calculation_Group",0),"RP6_BII_Dummy")
+FIX(&CurScenario)
+FIX(@RELATIVE("YearTotal",0))
+FIX(@RELATIVE("P&L",0))
+"Int" (
+@CALCMODE(BOTTOMUP);
+@CALCMODE(BLOCK);
+/* Convert P&L Items from INR to EUR */
+IF(@ISUDA(Entity,"INR") AND @ISMBR("EUR"))
+"Local" * "Version" -> "Currency" -> "Entity" -> "Brand" -> "Data" -> "Department" -> "Factory" -> "HSP_Rate_EUR" / "Version" -> "Currency" -> "Entity" -> "Brand" -> "Data" -> "Department" -> "Factory" -> "HSP_Rate_INR";
+/* Convert P&L Items from USD to EUR */
+ELSEIF(@ISUDA(Entity,"USD") AND @ISMBR("EUR"))
+"Local" * "Version" -> "Currency" -> "Entity" -> "Brand" -> "Data" -> "Department" -> "Factory" -> "HSP_Rate_EUR" / "Version" -> "Currency" -> "Entity" -> "Brand" -> "Data" -> "Department" -> "Factory" -> "HSP_Rate_USD";
+ENDIF
+)
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/* ***************************************************************************************** */
+/* Convert from Local currency to USD */
+FIX("HSP_InputValue")
+FIX(&CurYear)
+FIX({INHSP_Version})
+FIX("EUR","INR","USD")
+FIX(@RELATIVE({INHSP_Ent},0))
+FIX(@RELATIVE("Other_Factory",0),"No_Factory",@RELATIVE("HOF_PRD_OVH",0))
+FIX("No_Department")
+FIX(@RELATIVE("Calculation_Group",0),"RP6_BII_Dummy")
+FIX(&CurScenario)
+FIX(@RELATIVE("YearTotal",0))
+FIX(@RELATIVE("P&L",0))
+"Int" (
+@CALCMODE(BOTTOMUP);
+@CALCMODE(BLOCK);
+/* Convert P&L Items from INR to USD */
+IF(@ISUDA(Entity,"INR") AND @ISMBR("USD"))
+"Local" * "Version" -> "Currency" -> "Entity" -> "Brand" -> "Data" -> "Department" -> "Factory" -> "HSP_Rate_USD" / "Version" -> "Currency" -> "Entity" -> "Brand" -> "Data" -> "Department" -> "Factory" -> "HSP_Rate_INR";
+/* Convert P&L Items from USD to USD */
+ELSEIF(@ISUDA(Entity,"USD") AND @ISMBR("USD"))
+"Local";
+ENDIF
+)
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/* ***************************************************************************************** */
+/* Convert from Local currency to INR */
+FIX("HSP_InputValue")
+FIX("EUR","INR","USD")
+FIX(&CurYear)
+FIX({INHSP_Version})
+FIX(@RELATIVE({INHSP_Ent},0))
+FIX(@RELATIVE("Other_Factory",0),"No_Factory",@RELATIVE("HOF_PRD_OVH",0))
+FIX("No_Department")
+FIX(@RELATIVE("Calculation_Group",0),"RP6_BII_Dummy")
+FIX(&CurScenario)
+FIX(@RELATIVE("YearTotal",0))
+FIX(@RELATIVE("P&L",0))
+"Int" (
+@CALCMODE(BOTTOMUP);
+@CALCMODE(BLOCK);
+/* Convert P&L Items from USD to INR */
+IF(@ISUDA(Entity,"USD") AND @ISMBR("INR"))
+"Local" * "Version" -> "Currency" -> "Entity" -> "Brand" -> "Data" -> "Department" -> "Factory" -> "HSP_Rate_INR" / "Version" -> "Currency" -> "Entity" -> "Brand" -> "Data" -> "Department" -> "Factory" -> "HSP_Rate_USD";
+ELSEIF(@ISUDA(Entity,"INR") AND @ISMBR("INR"))
+"Local";
+ENDIF
+)
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/* ***************************************************************************************** */
+/* **********************************For Aggregation**************************************** */
+/* ***************************************************************************************** */
+SET FRMLBOTTOMUP ON;
+/* Aggregate Brand for display */
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX("EUR","INR","USD")
+FIX(&CurYear)
+FIX(@RELATIVE("Other_Factory",0), "No_Factory",@RELATIVE("HOF_PRD_OVH",0))
+FIX("No_Department")
+FIX(&CurScenario)
+FIX(@RELATIVE({INHSP_Ent},0))
+FIX(@RELATIVE("YearTotal",0))
+FIX(@RELATIVE("P&L",0),"HVAC","HV9L")
+FIX("Int")
+"BrandPack_Group_BII";
+"BrandPack_Group_BIO";
+"BrandPack_Group";
+"Brand_Group_BII";
+"Brand_Group_BIO";
+"Brand_Group";
+"15_Key_Brands";
+"30_Key_Brands";
+@IDESCENDANTS("RP6_Total");
+@IDESCENDANTS("Product_Segment_Total");
+@IDESCENDANTS("Mgm_Reporting_Total");
+@CHILDREN("RP6_Reporting");
+@CHILDREN("Top 14");
+@ICHILDREN("Total Strategic Brands");
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/* Aggregate Entity for display */
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX("EUR","INR","USD")
+FIX(&CurYear)
+FIX(@RELATIVE("Other_Factory",0), "No_Factory",@RELATIVE("HOF_PRD_OVH",0))
+FIX("No_Department")
+FIX(&CurScenario)
+FIX("BrandPack_Group_BII","BrandPack_Group_BIO","BrandPack_Group","Brand_Group_BII","Brand_Group_BIO","Brand_Group",@IDESCENDANTS("RP6_Total"),@IDESCENDANTS("Product_Segment_Total"),@IDESCENDANTS("Mgm_Reporting_Total"),@RELATIVE("BrandPack_Group",0), "15_Key_Brands", "30_Key_Brands", @CHILDREN("RP6_Reporting"), @CHILDREN("Top 14"), @ICHILDREN("Total Strategic Brands"))
+FIX(@RELATIVE("YearTotal",0))
+FIX(@RELATIVE("P&L",0),"HVAC","HV9L")
+FIX("Int")
+@IDESCENDANTS({INHSP_Ent});
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+/* Aggregate Factory for display */
+FIX("HSP_InputValue")
+FIX({INHSP_Version})
+FIX("EUR","INR","USD")
+FIX(&CurYear)
+FIX("No_Department")
+FIX(&CurScenario)
+FIX(@IDESCENDANTS({INHSP_Ent}))
+FIX("BrandPack_Group_BII","BrandPack_Group_BIO","BrandPack_Group","Brand_Group_BII","Brand_Group_BIO","Brand_Group",@IDESCENDANTS("RP6_Total"),@IDESCENDANTS("Product_Segment_Total"),@IDESCENDANTS("Mgm_Reporting_Total"),@RELATIVE("BrandPack_Group",0), "15_Key_Brands", "30_Key_Brands", @CHILDREN("RP6_Reporting"), @CHILDREN("Top 14"), @ICHILDREN("Total Strategic Brands"))
+FIX(@RELATIVE("YearTotal",0))
+FIX(@RELATIVE("P&L",0),"HVAC","HV9L")
+FIX("Int")
+"HOF_PRD_OVH";
+"Other_Factory";
+"Total_Factory";
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+ENDFIX
+
+
+/* reset flag as zero upon completion of rules*/
+FIX("Int" ,"BegBalance" ,"HSP_InputValue" ,{INHSP_Version}, {INHSP_Ent} ,"FY08" ,"No_Factory" ,"No_Department" ,"LE4" ,"HST")
+FIX("No_Brand")
+
+"Local" = #Missing;
+
+ENDFIX
+ENDFIX
+
 
 
 
@@ -3981,7 +5033,12 @@ function Beautifier()
 
 
 
+List<ASI_MFM_PO__History> POHs= [select Id,OldValue, NewValue, Parent.Id, Parent.name,Parent.RecordType.DeveloperName,FIELD 
+                                  from ASI_MFM_PO__History WHERE  CreatedById='005D0000002zaqE' and FIELD='ASI_MFM_Route_Type__c' and Parent.RecordType.DeveloperName  like 'ASI_MFM_TR%' limit 10];
 
+for(ASI_MFM_PO__History poh:POHs){
+    system.debug(Parent.Id+' || '+poh.FIELD+'change: '+poh.OldValue+' From '+poh.NewValue );
+}
  
  
  
