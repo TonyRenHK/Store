@@ -1,0 +1,9 @@
+<script type="text/javascript">
+  function iframeLoaded(that) {
+      // console.log(that.contentWindow.document.body.scrollHeight);//console.log($('#idIframe').scrollHeight;//
+      //console.log($('#idIframe').parent().width());//
+      $('#idIframe').width($('#idIframe').parent().width());
+      
+  }
+</script>   
+<iframe id="idIframe" height="{{ include.height }}"   frameBorder="0" src="{{ include.id }}" onload="iframeLoaded(this)" ></iframe>

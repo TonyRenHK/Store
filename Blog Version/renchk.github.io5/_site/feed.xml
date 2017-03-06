@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tony Ren Blog</title>
+    <description></description>
+    <link>https://renchk.github.io/</link>
+    <atom:link href="https://renchk.github.io/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Sun, 28 Aug 2016 16:57:27 +0000</pubDate>
+    <lastBuildDate>Sun, 28 Aug 2016 16:57:27 +0000</lastBuildDate>
+    <generator>Jekyll v3.2.1</generator>
+    
+      <item>
+        <title>[SFDC]How to get certain days month end day?</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#question&quot; id=&quot;markdown-toc-question&quot;&gt;Question&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#follow-below-code&quot; id=&quot;markdown-toc-follow-below-code&quot;&gt;Follow below Code&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;question&quot;&gt;Question&lt;/h2&gt;
+
+&lt;p&gt;How to get certain days month end day in Apex?&lt;/p&gt;
+
+&lt;h2 id=&quot;follow-below-code&quot;&gt;Follow below Code&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Date selectedDate = Date.today().addDays(4);
+Date firstDate = selectedDate.toStartOfMonth();
+p.Date__c =firstDate.addDays(date.daysInMonth(selectedDate.year() , selectedDate.month())  - 1);
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+</description>
+        <pubDate>Thu, 25 Aug 2016 00:00:00 +0000</pubDate>
+        <link>https://renchk.github.io/2016/08/25/How-to-get-certain-days-month-end-day/</link>
+        <guid isPermaLink="true">https://renchk.github.io/2016/08/25/How-to-get-certain-days-month-end-day/</guid>
+        
+        <category>SFDC</category>
+        
+        <category>Apex</category>
+        
+        <category>Salesforce</category>
+        
+        
+        <category>SFDC</category>
+        
+      </item>
+    
+      <item>
+        <title>How to push my code to github?</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#question&quot; id=&quot;markdown-toc-question&quot;&gt;Question&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#how-to-push-my-code-to-github&quot; id=&quot;markdown-toc-how-to-push-my-code-to-github&quot;&gt;How to push my code to github?&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#follow-below-code&quot; id=&quot;markdown-toc-follow-below-code&quot;&gt;Follow below Code&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#how-to-preview-my-blog-in-cloud9&quot; id=&quot;markdown-toc-how-to-preview-my-blog-in-cloud9&quot;&gt;How to preview my Blog in Cloud9?&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;question&quot;&gt;Question&lt;/h2&gt;
+
+&lt;p&gt;I have some codes in Cloud 9. How to push my code to github?&lt;/p&gt;
+
+&lt;h2 id=&quot;how-to-push-my-code-to-github&quot;&gt;How to push my code to github?&lt;/h2&gt;
+
+&lt;p&gt;It applied in cloud 9.&lt;/p&gt;
+
+&lt;h2 id=&quot;follow-below-code&quot;&gt;Follow below Code&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cd workspace
+$ cd renchk.github.io
+$ git add -A
+$ git commit -m &quot;20160721&quot; 
+$ git remote add b1 https://github.com/Renchk/renchk.github.io.git 
+$ git push -u origin9 master  
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;h2 id=&quot;how-to-preview-my-blog-in-cloud9&quot;&gt;How to preview my Blog in Cloud9?&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;tonyrenhk:~/workspace (master) $ gem install jekyll gem install jekyll-sitemap gem install github-pages
+
+cd renchk.github.io
+
+jekyll serve --host 0.0.0.0 --port 8080
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;and I can preview here: https://demo-project-tonyrenhk.c9users.io/&lt;/p&gt;
+</description>
+        <pubDate>Wed, 24 Aug 2016 00:00:00 +0000</pubDate>
+        <link>https://renchk.github.io/2016/08/24/Howtopushmycodetogithub/</link>
+        <guid isPermaLink="true">https://renchk.github.io/2016/08/24/Howtopushmycodetogithub/</guid>
+        
+        <category>Git</category>
+        
+        <category>GitHub</category>
+        
+        
+        <category>GitHub</category>
+        
+      </item>
+    
+      <item>
+        <title>JQuery Input: only input one field.</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#question&quot; id=&quot;markdown-toc-question&quot;&gt;Question&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#htd&quot; id=&quot;markdown-toc-htd&quot;&gt;HTD&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;question&quot;&gt;Question&lt;/h2&gt;
+
+&lt;p&gt;JQuery Input: only input one field in HTML&lt;/p&gt;
+
+&lt;h2 id=&quot;htd&quot;&gt;HTD&lt;/h2&gt;
+
+&lt;p&gt;HTD=’How To Do’:&lt;/p&gt;
+
+&lt;p&gt;There are following Code:&lt;/p&gt;
+
+&lt;head&gt;
+    &lt;script type=&quot;text/javascript&quot; src=&quot;https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script type=&quot;text/javascript&quot; src=&quot;https://cdnjs.cloudflare.com/ajax/libs/gist-embed/2.4/gist-embed.min.js&quot;&gt;&lt;/script&gt;
+  &lt;/head&gt;
+
+&lt;p&gt;&lt;code data-gist-id=&quot;b3c1a1bd54546ca9fe6f92487d8df01c&quot;&gt;&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Demo here:&lt;/p&gt;
+
+&lt;script type=&quot;text/javascript&quot;&gt;
+  function iframeLoaded(that) {
+      // console.log(that.contentWindow.document.body.scrollHeight);//console.log($('#idIframe').scrollHeight;//
+      //console.log($('#idIframe').parent().width());//
+      $('#idIframe').width($('#idIframe').parent().width());
+      
+  }
+&lt;/script&gt;
+
+&lt;iframe id=&quot;idIframe&quot; height=&quot;100em&quot; frameborder=&quot;0&quot; src=&quot;https://tony-ren-dev.github.io/demo/Jquery/JQuery-Input-only-input-one-field.html&quot; onload=&quot;iframeLoaded(this)&quot;&gt;&lt;/iframe&gt;
+
+&lt;p&gt;Thanks for reading this article. Any code samples provided here are purely for experimental purposes. The primary purpose of this article is just to share the knowledge and my own experience. Nothing more, nothing less. Use this code and approach at your own risk.Please feel free to contact me (yamshingkwan@gmail.com) if you have any inquiry or the code have any problem. Thank you.&lt;/p&gt;
+</description>
+        <pubDate>Tue, 23 Aug 2016 00:00:00 +0000</pubDate>
+        <link>https://renchk.github.io/2016/08/23/JQuery-Input-only-input-one-field/</link>
+        <guid isPermaLink="true">https://renchk.github.io/2016/08/23/JQuery-Input-only-input-one-field/</guid>
+        
+        <category>JQuery</category>
+        
+        <category>Html</category>
+        
+        
+        <category>JQuery</category>
+        
+      </item>
+    
+      <item>
+        <title>Generate Blog Post Name for Jekyll Blog quickly</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#question&quot; id=&quot;markdown-toc-question&quot;&gt;Question&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#demo&quot; id=&quot;markdown-toc-demo&quot;&gt;Demo&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;question&quot;&gt;Question&lt;/h2&gt;
+
+&lt;p&gt;How to Generate Blog Post Name for Jekyll Blog quickly?&lt;/p&gt;
+
+&lt;h2 id=&quot;demo&quot;&gt;Demo&lt;/h2&gt;
+
+&lt;p&gt;For example:&lt;/p&gt;
+
+&lt;p&gt;If you want to posy blog name ‘How to Discover Your Blogging Niche?’ in Jekyll, and the posy name should name as ‘2016-08-29-How-to-Discover-Your-Blogging-Niche.markdown’.&lt;/p&gt;
+
+&lt;p&gt;I write following code to let us quickly generate Post Name&lt;/p&gt;
+
+&lt;p&gt;Demo here:&lt;/p&gt;
+
+&lt;script type=&quot;text/javascript&quot;&gt;
+  function iframeLoaded(that) {
+      // console.log(that.contentWindow.document.body.scrollHeight);//console.log($('#idIframe').scrollHeight;//
+      //console.log($('#idIframe').parent().width());//
+      $('#idIframe').width($('#idIframe').parent().width());
+      
+  }
+&lt;/script&gt;
+
+&lt;iframe id=&quot;idIframe&quot; height=&quot;200em&quot; frameborder=&quot;0&quot; src=&quot;https://tony-ren-dev.github.io/demo/Jquery/Generate-Name.html&quot; onload=&quot;iframeLoaded(this)&quot;&gt;&lt;/iframe&gt;
+
+&lt;p&gt;The demo link: &lt;a href=&quot;https://tony-ren-dev.github.io/demo/Jquery/Generate-Name.html&quot;&gt;Generate Post Name&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;There are following Code:&lt;/p&gt;
+
+&lt;head&gt;
+    &lt;script type=&quot;text/javascript&quot; src=&quot;https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script type=&quot;text/javascript&quot; src=&quot;https://cdnjs.cloudflare.com/ajax/libs/gist-embed/2.4/gist-embed.min.js&quot;&gt;&lt;/script&gt;
+  &lt;/head&gt;
+
+&lt;p&gt;&lt;code data-gist-id=&quot;47304edf522399bd667b85d9c8f5b01d&quot;&gt;&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Thanks for reading this article. Any code samples provided here are purely for experimental purposes. The primary purpose of this article is just to share the knowledge and my own experience. Nothing more, nothing less. Use this code and approach at your own risk.Please feel free to contact me (yamshingkwan@gmail.com) if you have any inquiry or the code have any problem. Thank you.&lt;/p&gt;
+
+</description>
+        <pubDate>Sun, 21 Aug 2016 00:00:00 +0000</pubDate>
+        <link>https://renchk.github.io/2016/08/21/Generate-Post-Name-Jekyll-Blog-quickly/</link>
+        <guid isPermaLink="true">https://renchk.github.io/2016/08/21/Generate-Post-Name-Jekyll-Blog-quickly/</guid>
+        
+        <category>JQuery</category>
+        
+        <category>Html</category>
+        
+        <category>Demo</category>
+        
+        
+        <category>JQuery</category>
+        
+      </item>
+    
+  </channel>
+</rss>

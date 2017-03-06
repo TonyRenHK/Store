@@ -1,0 +1,12 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript">
+  function iframeLoaded(that) { //console.log($('#OneDriveViewframe').parent().width());// // console.log(that.contentWindow.document.body.scrollHeight);//console.log($('#idIframe').scrollHeight;//
+      $('#OneDriveViewframe').width($('#OneDriveViewframe').parent().width());
+      
+  }
+</script> 
+<iframe id="OneDriveViewframe" 
+        src="{{ include.id }}"  
+        onload="iframeLoaded(this)"
+        height="{{ include.height }}"  
+        frameborder="0" scrolling="no"></iframe> 
