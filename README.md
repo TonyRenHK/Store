@@ -6,10 +6,14 @@ https://tony-ren-dev.github.io/demo/Jquery/JQuery-Input-only-input-one-field.htm
 
 
 
+
+
 $ git add -A
 $ git commit -m "20160721" 
 $ git remote add b1 https://github.com/Renchk/renchk.github.io.git
 $ git push -u bWE1 master  
+
+
 
 
 https://demo-project-tonyrenhk.c9users.io/
