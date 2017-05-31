@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <base target="_top">
+
+    <title>Personal Management</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://cdn.rawgit.com/orangehill/jstree-bootstrap-theme/master/dist/themes/proton/style.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.rawgit.com/TonyRenHK/TonyRenHK/master/Library/Font-Awesome/css/font-awesome.css">
+
+    <link rel="stylesheet" href="https://cdn.rawgit.com/TonyRenHK/TonyRenHK/master/Library/awesome-bootstrap-checkbox-build.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.0.9/jstree.min.js"></script>
+
+    <style>
+        body,
+        html {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .clearfix:after {
+            content: '';
+            display: table;
+            clear: both;
+        }
+        
+        #main {
+            float: right;
+            height: 500px;
+            width: 75%;
+        }
+        
+        #sidebar {
+            width: 25%;
+            float: left;
+            height: 500px;
+            overflow-y: hidden;
+        }
+        
+        #dragbar {
+            background-color: black;
+            height: 100%;
+            float: right;
+            width: 3px;
+            cursor: col-resize;
+        }
+        
+        #ghostbar {
+            width: 3px;
+            background-color: #000;
+            opacity: 0.5;
+            position: absolute;
+            cursor: col-resize;
+            z-index: 999
+        }
+        
+        .rowcss {
+            padding-top: 1em;
+            padding-left: 1em;
+            padding-right: 1em;
+        }
+    </style>
+
+    <script>
+        var i = 0;
+        var dragging = false;
+        var focusId = '',LinkData;
+        
+        
+        $(document).ready(function() {
+
+            //init 
+            InitFolders();
+            //loadingSidebarData();
+
+            //loadingMainPartData();
+            $("#InputURL").on("change keyup paste", function() { //console.log('change!'+$("#Inputlink").val());//console.log(temp);
+                var temp = google.script.run.withSuccessHandler(GetLinkResult).GetLinkTitle($("#InputURL").val());
+            })
+
+            $('#dragbar').mousedown(function(e) {
+                console.log('mousedown!!');
+                e.preventDefault();
+
+                dragging = true;
+                var main = $('#main');
+                var ghostbar = $('<div>', {
+                    id: 'ghostbar',
+                    css: {
+                        height: main.outerHeight(),
+                        top: main.offset().top,
+                        left: main.offset().left
+                    }
+                }).appendTo('body');
+
+                $(document).mousemove(function(e) {
+                    ghostbar.css("left", e.pageX + 2);
+                });
+
+            });
+
+            $(document).mouseup(function(e) {
+                if (dragging) {
+                    var percentage = (e.pageX / window.innerWidth) * 100;
+                    var mainPercentage = 100 - percentage;
+
+
+                    $('#sidebar').css("width", percentage + "%");
+                    $('#main').css("width", mainPercentage + "%");
+                    $('#ghostbar').remove();
+                    $(document).unbind('mousemove');
+                    dragging = false;
+                }
+            });
+        }); // End of document ready
+        
+        
+        
+        function AddBookmark(){//console.log($('#InputURL').val()+'  || '+$('#InputTitle').val()+'  || '+$('#InputNotes').val()+'  || '+$('#InputLabels').val());
+        var tempId= new Date().getTime();
+        var TempObject={
+               "id": String(tempId),
+                "parent": "#",
+                "icon": "glyphicon glyphicon-file",
+                "text": $('#InputTitle').val(),
+                "data": {
+                    "parentId": "#",
+					"URL": $('#InputURL').val(),
+					"Notes": $('#InputNotes').val(),
+					"Labels": $('#InputLabels').val()
+                }
+            } //end of object creation
+          LinkData.push(TempObject);
+          console.log('--------'+JSON.stringify(LinkData));
+           console.log(LinkData);
+           
+           
+            var RunScript = google.script.run.withSuccessHandler(GetResult).UpdateJSONFile('LinkData.json',JSON.stringify(LinkData));
+        }
+        
+         function GetResult(ResultData) {
+         console.log(ResultData);
+         }
+
+
+
+
+
+
+
+        function InitFolders() {
+            var temp2 = google.script.run.withSuccessHandler(GetSidebarData).LoadingData('DB.json');
+            var temp3 = google.script.run.withSuccessHandler(GetMainData).LoadingData('LinkData.json');
+        }
+        
+        /*
+        Get Link data from 'LinkData.json' in google drive
+        */
+        function GetMainData(ResultData) {
+        LinkData=ResultData;
+            loadingMainPartData('#',ResultData);
+        }
+        
+        
+        /*
+        Get Folder data from 'LinkData.json' in google drive
+        */
+        function GetSidebarData(ResultData) {//console.log('Enter1');//console.log(ResultData);
+            loadingSidebarData(ResultData);
+        }
+
+
+        /*
+        draw jstree based on Folder data 
+        */
+        function loadingSidebarData(InputData) {
+            // Generate random string/characters in JavaScript : Math.random().toString(36).substring(7); 
+            //folder
+            /*
+            var data = [{
+                "id": "er77lt2kajmb3mpr2j4i",
+                "parent": "#",
+                "text": "Usual",
+                "data": {
+                    "obj": {
+                        "asdf": "Tony"
+                    }
+                }
+            }, {
+                "id": "0h04j7c9dxy8bdb73nmi",
+                "parent": "#",
+                "text": "JavaScript"
+            }, {
+                "id": "xnwmp09p3m7imody4x6r",
+                "parent": "0h04j7c9dxy8bdb73nmi",
+                "text": "AngularJS"
+            }, {
+
+                "id": "rmne1d8rje9h65wdygb9",
+                "parent": "0h04j7c9dxy8bdb73nmi",
+                "text": "React"
+            }];
+            */
+            $("#sidebarContent").jstree({
+                "core": {
+                    // so that create works
+                    "check_callback": true,
+
+                    "data": InputData,
+                    'themes': {
+                        'name': 'proton',
+                        'responsive': true,
+                        "check_callback": true
+                    }
+                },
+                "plugins": ["dnd"]
+            }).on('create_node.jstree', function(e, data) {
+                console.log('saved');
+            });
+
+
+
+            $('#sidebarContent').on("changed.jstree", function(e, data) {
+                console.log('Yes');
+                console.log(data.selected);
+            });
+        } // end of function loadingSidebarData 
+
+
+
+        /*
+        draw link bookmark based on link data 
+        */
+        function loadingMainPartData(InputFolder,InputData) {//console.log('-----loadingMainPartData--------'+InputFolder);//console.log(InputData);
+           var displayList=[];
+           /*
+           for(var i=0;i<InputData.length;i++){
+               console.log(InputData[i].data.parentId);
+               if(InputData[i].data.parentId == InputFolder){
+                   displayList.push(InputData[i]);
+               }
+            }*/
+            
+            
+            var data2 = [{
+                "id": "5h4xoqrztbzlrosqncdi",
+                "parent": "#",
+                "icon": "glyphicon glyphicon-file",
+                "text": "http://jsbeautifier.org/",
+                "data": {
+                    "parentId": "1"
+                }
+            }, {
+                "id": "o5v1g249jzpf7qlg14i",
+                "parent": "#",
+                "icon": "glyphicon glyphicon-file",
+                "text": "https://www.jstree.com/plugins/",
+                "data": {
+                    "parentId": "2"
+                }
+            }, {
+                "id": "e3fa446dxak96893sor",
+                "parent": "#",
+                "icon": "glyphicon glyphicon-bookmark",
+                "text": "http://rawgit.com/",
+                "data": {
+                    "parentId": "0"
+                }
+            }, {
+
+                "id": "hyi8d03ry36xf6zjjor",
+                "parent": "#",
+                "icon": "glyphicon glyphicon-file",
+                "text": "http://codebeautify.org/",
+                "data": {
+                    "parentId": "1"
+                }
+            }];
+            
+
+            $("#MainPartContent").jstree({
+                "core": {
+                    // so that create works
+                    "check_callback": function(operation, node, node_parent, node_position, more) {
+                        if (operation === "move_node") {
+                            return false;
+                        }
+                    },
+
+                    "data": data2,
+                    'themes': {
+                        'name': 'proton',
+                        'responsive': true,
+                        "check_callback": true
+                    }
+                },
+                "plugins": ["dnd"]
+            }).on('create_node.jstree', function(e, data) {
+                console.log('saved');
+            });
+
+
+
+
+            $('#MainPartContent').on("changed.jstree", function(e, data) {//console.log('Yes');console.log(typeof focusId);console.log(typeof data.selected);console.log('------------');
+                //double click
+                if (focusId == String(data.selected)) { ///console.log('DS');//
+                    //console.log(data.node.data.URL);
+                    var tempURL = data.node.text;
+                    focusId = '';
+                    window.open(data.node.data.URL);
+                } else { //console.log('D');
+                    focusId = data.selected;
+                }
+            });
+
+
+
+        } // end of loadingMainPartData
+
+
+
+        /*
+        Get title from link and write to the input field
+        */
+        
+        function GetLinkResult(ResultData) { //
+            console.log('Enter GetLinkResult'); //console.log(typeof ResultData);
+            $("#InputTitle").val(ResultData);
+        }
+
+        /*
+        create one node in jstree
+        */
+        function AddNode() {
+            console.log($('#FolderName').val() + 'AddNode 1 ' + $('#IsRoot').is(':checked'));
+            /*$('#jstree').jstree().create_node('#', {
+                "id": "ajson3",
+                "text": "newly added"
+            }, "last", function() {
+                console.log("done");
+            });
+            */
+
+            if ($('#IsRoot').is(':checked')) {
+
+                $('#sidebarContent').jstree().create_node('#', {
+                    "type": "file",
+                    "text": $('#FolderName').val()
+                }, "last", function() {
+                    console.log("done");
+                });
+
+            } else {
+                var ref = $('#sidebarContent').jstree(true),
+                    sel = ref.get_selected();
+                if (!sel.length) {
+                    return false;
+                }
+                sel = sel[0];
+                sel = ref.create_node(sel, {
+                    "text": $('#FolderName').val(),
+                    "type": "file"
+                });
+            }
+
+        }
+
+
+
+        function CreateFolder() {
+            if (document.getElementById('CreateFolderID').style.display == 'none') {
+                document.getElementById('CreateFolderID').style.display = '';
+            } else {
+                document.getElementById('CreateFolderID').style.display = 'none';
+            }
+
+        }
+
+
+
+
+        function DeleteNode() { //console.log('DeleteNode  ----');
+            var ref = $('#sidebarContent').jstree(true),
+                sel = ref.get_selected();
+            if (!sel.length) {
+                return false;
+            }
+            ref.delete_node(sel);
+        }
+    </script>
+
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+                <a class="navbar-brand" href="#">Personal Management</a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Me<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a onclick="changeNoteManagement();">Note Manage </a></li>
+                            <li><a href="#">Password Manage</a></li>
+                            <li><a href="#">Shopping List Manage</a></li>
+                            <li><a href="#">To do List</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#">Password Manage</a></li>
+                    <li><a href="#">BookMark Manage</a></li>
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="panel panel-primary">
+            <div class="panel-heading">Add new BookMark</div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="InputURL" placeholder="Input URL">
+                </div>
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Title</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" id="InputTitle" type="text" placeholder="Input Title">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Labels</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" id="InputLabels" type="text" placeholder="Input Labels">
+                        </div>
+                    </div>
+                    <div class="form-group" style="padding-bottom: -3em;">
+                        <label class="col-sm-2 control-label">Notes</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" rows="3" id="InputNotes"></textarea>
+                        </div>
+                    </div>
+
+
+                    <div class="row rowcss">
+                        <form class="form-inline">
+                            <button style="display: inline-block;" type="button" class="btn btn-primary" onclick="CreateFolder();">Create Folder</button>
+                            <span id="CreateFolderID" style="display:none">
+                         <div class="checkbox checkbox-primary" style="display: inline-block;">
+                            <input id="IsRoot" class="styled" type="checkbox">
+                            <label for="IsRoot">
+                              Root
+                         </label>
+                        </div>
+                        <div  style="display: inline-block; "  >
+                            <input class="form-control" id="FolderName" type="text" placeholder="Folder Name">
+                        </div>
+                        <button type="button" class="btn btn-default" onclick="AddNode();" >Create</button>
+                        
+                        </span>
+
+
+                            <button type="button" class="btn btn-danger" onclick="DeleteNode();">Delete Folder </button>
+                            <button type="button" class="btn btn-info" onclick="AddNode();">Sync</button>
+                            <button type="button" class="btn btn-warning" onclick="ClearFunction();">Clear</button>
+                            <button type="button" class="btn btn-success" onclick="AddBookmark();">Add Bookmark </button>
+
+                        </form>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="container-fluid  clearfix">
+        <div id="sidebar">
+            <span id="position"></span>
+            <div id="dragbar"></div>
+
+            <div class="panel panel-default">
+                <div class="panel-body" id="sidebarContent"></div>
+            </div>
+
+        </div>
+
+        <div id="main">
+            <div class="panel panel-default">
+                <div class="panel-body" id="MainPartContent"> </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+</html>
